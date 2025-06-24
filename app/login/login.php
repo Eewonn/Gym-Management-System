@@ -1,3 +1,23 @@
+<?php
+session_start();
+$msg = '';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
+   $user = $_POST['username'];
+   $password = $_POST['password'];
+
+   if ($user === 'admin' && $password === 'test123') {
+      $msg = "You have entered correct username and password";
+      $_SESSION['user_id'] = 1; // replace this with actual user ID from DB later
+      $_SESSION['username'] = $user;
+      header('Location: ../dashboard/dashboard.php');
+      exit();
+   } else {
+      $msg = "You have entered wrong Password";
+   }
+}
+?>
+
 <html lang="en">
 
 <head>
@@ -8,21 +28,7 @@
 </head>
 
 <body>
-    <?php
-      $msg = '';
-      $users = ['user'=>"test"];
-
-      if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
-         $user = $_POST['username'];
-         $password = $_POST['password'];
-
-         if ($password === $users['user']) {
-            $msg = "You have entered correct username and password";
-         } else {
-            $msg = "You have entered wrong Password";
-         }
-      }
-   ?>
+    
 
     <!-- Front End -->
     <div class="login-container">
