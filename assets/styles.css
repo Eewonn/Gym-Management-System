@@ -1,3 +1,145 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+}
 
 
+.login-container {
+    margin: 0;
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
 
+/* Left Panel */
+.left-panel {
+    flex: 1;
+    position: relative;
+}
+
+.left-panel .background-image {
+    width: 100%;
+    height: 100%;
+
+}
+
+.overlay-text {
+    position: absolute;
+    top: 20%;
+    left: 10%;
+    color: white;
+}
+
+.overlay-text h1 {
+    margin-bottom: 20px;
+    font-size: 64px;
+    font-weight: bold;
+}
+
+/* Right Panel */
+.right-panel {
+    flex: 1;
+    background-color: #2A2A2A;
+    color: white;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.logo-box {
+    background-color: white;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    overflow: hidden; 
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.logo-box img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+.right-panel .welcome-box {
+    font-size: 28px;
+    margin-bottom: 50px;
+    text-align: center;
+    width: 100%;
+    line-height: 0.5;
+}
+
+form {
+    width: 100%;
+    max-width: 300px;
+    margin-top: 20px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 15px;
+    background-color: #030303; /* Always dark background */
+    border: none; /* No borders */
+    border-radius: 5px; /* Rounded corners */
+    outline: none; /* Remove default focus outline */
+    font-size: 14px;
+    color: #FAFCFCBA; /* Always this semi-transparent white */
+    text-decoration: none;
+}
+
+.input-group input::placeholder {
+    color: #FAFCFCBA; /* Placeholder uses the same semi-transparent white */
+}
+
+.input-group input:focus {
+    background-color: #030303; /* Keep the same background on focus */
+    color: #FAFCFCBA; /* Keep the same text color on focus */
+}
+
+
+.forgot-password {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.forgot-password a {
+    color: #a9a9a9;
+    font-size: 12px;
+    text-decoration: none;
+}
+
+.sign-in-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #800080; /* Purple button */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.datetime {
+    position: absolute;
+    bottom: 20px;
+    right: 40px;
+    font-size: 12px;
+    color: white;
+    margin-top: 0;
+}
