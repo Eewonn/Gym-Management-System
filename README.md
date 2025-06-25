@@ -6,13 +6,13 @@ A capstone project for CCS0043L: Application Development with Emerging Technolog
 
 This project aims to develop a **Web-Based Gym Management System** using **PHP**, **MySQL**, **HTML**, and **CSS** to help gym owners, and staff manage daily operations digitally and efficiently.
 
-## 👥 Proponents
+## Proponents:
 
 - **Mark Eron A. Diaz**
 - **Jhon Vincent S. Libatique**
 - **Zio Gregory R. Magugat**
 
-## 🎯 Objectives
+## Objectives:
 
 The system aims to:
 
@@ -24,20 +24,20 @@ The system aims to:
 
 ---
 
-## 🎯 Target Users & Benefits
+## Target Users & Benefits:
 
-### 👑 Gym Owners & Admins
+### Gym Owners & Admins
 - Centralized dashboard for managing operations.
 - Access to sales reports and performance analytics.
 - Eliminate the need for paper logs and manual tracking.
 
-### 🧑‍💼 Gym Staff
+### Gym Staff
 - Secure tracking of member attendance.
 - Ability to update training sessions efficiently.
 
 ---
 
-## 🛠️ Technologies Used
+## Technologies Used:
 
 - **Backend**: PHP
 - **Database**: MySQL
@@ -46,7 +46,7 @@ The system aims to:
 
 ---
 
-## 📊 Features
+## Features:
 
 - User Authentication (Admin, Staff)
 - Membership Management
