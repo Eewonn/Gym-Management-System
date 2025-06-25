@@ -1,0 +1,4 @@
+-- INSERT INTO members (first_name, last_name, date_of_birth, gender, phone, email, address, join_date, membership_type) VALUES
+-- ('Alice', 'Wilson', '1990-05-15', 'Female', '555-1001', 'alice.wilson@email.com', '123 Main St', '2024-01-10', 'Premium'),
+-- ('Bob', 'Garcia', '1985-08-22', 'Male', '555-1002', 'bob.garcia@email.com', '456 Oak Ave', '2024-01-15', 'Basic'),
+-- ('Carol', 'Martinez', '1992-12-03', 'Female', '555-1003', 'carol.martinez@email.com', '789 Pine Rd', '2024-02-01', 'Premium');
