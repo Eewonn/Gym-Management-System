@@ -1,13 +1,6 @@
 <?php
-session_start();
-//Check if user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header('Location: ../login/login.php');
-    exit();
-}
-
 //Include database connection file
-require_once '../../db/db.php'; 
+require_once __DIR__ . '/../../db/db.php';
 
 //Handle form submissions
 if ($_POST) {
@@ -52,7 +45,7 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
     <title>Members Management</title>
 </head>
 <body>
-    <h1>Members Management</h1>
+    <h1>Manage Members</h1>
     
     <p><a href="../dashboard/dashboard.php">← Back to Dashboard</a></p>
 

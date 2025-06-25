@@ -1,0 +1,98 @@
+/* Main Layout */
+body {
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #1c1c1c; /* Match dashboard background */
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden; /* Prevents scroll on whole page, only right panel scrolls */
+}
+
+/* Sidebar on the Left */
+.left-panel-sidebar {
+    width: 20%;
+    background-color: #222; /* Sidebar background color */
+    color: white;
+    padding: 20px;
+    flex-shrink: 0; /* Prevent sidebar from shrinking */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+/* Sidebar Elements */
+.left-panel-sidebar .title {
+    margin-top: 0;
+    text-align: center;
+    font-size: 100%;
+    background: #030303;
+    color:rgb(255, 255, 255);
+    padding: 25px 0;
+    margin-top: 10px;
+}
+
+.left-panel-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 20%;
+}
+
+.left-panel-sidebar ul li {
+    margin: 15px 0;
+}
+
+.left-panel-sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+.left-panel-sidebar ul li a:hover {
+    background-color: #800080; /* Purple hover effect */
+}
+
+.left-panel-sidebar ul li a.active {
+    background-color: #800080; /* Active tab color */
+}
+
+.left-panel-sidebar ul li a i {
+    margin-right: 10px; /* Space between icon and text */
+}
+
+/* Right Panel: Content Area */
+.right-panel-content {
+    flex: 1; /* Takes remaining space */
+    padding: 20px;
+    background-color: #1c1c1c; /* Match your dashboard background */
+    color: white;
+    overflow-y: auto; /* Scrollable if content exceeds screen */
+}
+
+.sidebar-logo-box {
+    background-color: white;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    overflow: hidden; 
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    margin: 30px auto 0 auto;
+}
+
+.sidebar-logo-box img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto; /* Center the image inside the box */
+}

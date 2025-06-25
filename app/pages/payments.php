@@ -1,13 +1,6 @@
 <?php
-session_start();
-// Check if user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header('Location: ../login/login.php');
-    exit();
-}
-
 // Include database connection file
-require_once '../../db/db.php'; 
+require_once __DIR__ . '/../../db/db.php';
 
 // Handle form submissions
 if ($_POST) {
@@ -63,9 +56,7 @@ $members = $members_stmt->fetchAll(PDO::FETCH_ASSOC);
     <title>Payments Management</title>
 </head>
 <body>
-    <h1>Payments Management</h1>
-    
-    <p><a href="../dashboard/dashboard.php">← Back to Dashboard</a></p>
+    <h1>Manage Payments</h1>
 
     <?php if (isset($success_message)): ?>
         <p style="color: green;"><?= $success_message ?></p>
