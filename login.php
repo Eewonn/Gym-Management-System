@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
       $msg = "You have entered correct username and password";
       $_SESSION['user_id'] = 1; // replace this with actual user ID from DB later
       $_SESSION['username'] = $user;
-      header('Location: ../dashboard/dashboard.php');
+      header('Location: index.php');
       exit();
    } else {
       $msg = "You have entered wrong Password";
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../assets/styles.css">
+   <link rel="stylesheet" href="./assets/css/loginstyles.css">
     <title>Gym Management Login</title>
 </head>
 
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
     <div class="login-container">
 
          <div class="left-panel">
-            <img src="../../assets/gym-bg.jpg" alt="Gym Background" class="background-image" />
+            <img src="assets/img/gym-bg.jpg" alt="Gym Background" class="background-image" />
             <div class="overlay-text">
                <h1>MANAGE</h1>
                <h1>MOTIVATE</h1>
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
         <div class="right-panel">
             <div class="logo">
                <div class="logo-box">
-                  <img src="../../assets/logo.jpg" alt="Gym Logo" />
+                  <img src="assets/img/logo.jpg" alt="Gym Logo" />
                </div>
             </div>
 
