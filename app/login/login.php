@@ -2,10 +2,14 @@
 session_start();
 $msg = '';
 
+
+//Simple password authentication for demonstration purposes 
+//This should be replaced with a proper database connection and user validation in production
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
    $user = $_POST['username'];
    $password = $_POST['password'];
 
+   //For now, we are using hardcoded values for demonstration purposes
    if ($user === 'admin' && $password === 'test123') {
       $msg = "You have entered correct username and password";
       $_SESSION['user_id'] = 1; // replace this with actual user ID from DB later
@@ -24,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../assets/styles.css">
-    <title>Login</title>
+    <title>Gym Management Login</title>
 </head>
 
 <body>
