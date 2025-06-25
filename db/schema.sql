@@ -13,3 +13,14 @@
 -- );
 
 
+-- CREATE TABLE payments (
+--     payment_id INTEGER PRIMARY KEY AUTO_INCREMENT,
+--     member_id INTEGER,
+--     amount DECIMAL(10,2) NOT NULL,
+--     payment_date DATE DEFAULT (CURDATE()),
+--     payment_type TEXT,
+--     status TEXT DEFAULT 'PAID',
+--     FOREIGN KEY (member_id) REFERENCES members(member_id)
+-- );
+
+
