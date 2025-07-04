@@ -14,6 +14,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != 1) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./assets/css/dashboardstyles.css">
+    <link href="./assets/css/output.css" rel="stylesheet">
     <title>Gym Management System</title>
 </head>
 <body>

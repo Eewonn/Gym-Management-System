@@ -1,7 +1,7 @@
 <?php
 // Database configuration (open using phpMyAdmin)
 $host = 'localhost';
-$dbname = 'Gym-Management-System';
+$dbname = 'gym-management-system';
 $username = 'root';
 $password = '';
 

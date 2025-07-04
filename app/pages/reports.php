@@ -6,6 +6,6 @@
     <title>Reports</title>
 </head>
 <body>
-    <h1>Reports</h1>
+    <h1 class="text-4xl font-bold">Reports</h1>
 </body>
 </html>
