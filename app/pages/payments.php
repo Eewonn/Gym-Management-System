@@ -56,19 +56,20 @@ $members = $members_stmt->fetchAll(PDO::FETCH_ASSOC);
     <title>Payments Management</title>
 </head>
 <body>
-    <h1>Manage Payments</h1>
+    <h1 class="text-4xl font-bold">Manage Payments</h1>
+    <?php include 'app/includes/paymentcard.php'; ?>
 
     <?php if (isset($success_message)): ?>
         <p style="color: green;"><?= $success_message ?></p>
     <?php endif; ?>
 
-    <div>
+    <div class="mt-4">
         <button onclick="showAddForm()">Add Payment</button>
         <button onclick="showViewPayments()">View Payment</button>
     </div>
 
     <!-- Add Payment Form -->
-    <div id="addPaymentForm" style="display: none;">
+    <div id="addPaymentForm" class="mt-4">
         <h2>Add New Payment</h2>
         <form method="POST">
             <p>
@@ -111,14 +112,13 @@ $members = $members_stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- View Payments Section -->
     <div id="viewPayments">
-        <h2>Search Payments</h2>
         <form method="GET">
-            <input type="text" name="search" placeholder="Search by member name..." value="<?= htmlspecialchars($search_query) ?>">
-            <button type="submit">Search</button>
-            <a href="payments.php">Clear</a>
+            <input class="py-3 px-5 w-1/4 text-left border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" type="text" name="search" placeholder="Search by member name..." value="<?php echo htmlspecialchars($search_query); ?>">
+            <button class="py-3 px-4 bg-[#800080] text-white font-medium cursor-pointer ml-2 border  border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" type="submit">Search</button>
+            <button class="py-3 px-4 bg-[#E0E0E0] text-black font-medium cursor-pointer ml-2 border  border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" type="submit">Clear</button>
         </form>
 
-        <h2>Payments List</h2>
+        <h2 class="mt-4 text-xl">Payments List</h2>
         <?php if (!empty($payments)): ?>
             <table border="1">
                 <tr>

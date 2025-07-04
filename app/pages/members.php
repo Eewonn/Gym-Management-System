@@ -45,75 +45,97 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
     <title>Members Management</title>
 </head>
 <body>
-    <h1>Manage Members</h1>
+    <h1 class="text-4xl font-bold">Manage Members</h1>
     
-    <p><a href="../dashboard/dashboard.php">← Back to Dashboard</a></p>
 
     <?php if (isset($success_message)): ?>
         <p style="color: green;"><?= $success_message ?></p>
     <?php endif; ?>
 
-    <h2>Add New Member</h2>
-    <form method="POST">
-        <p>
-            <label>First Name:</label><br>
-            <input type="text" name="first_name" required>
-        </p>
-        <p>
-            <label>Last Name:</label><br>
-            <input type="text" name="last_name" required>
-        </p>
-        <p>
-            <label>Email:</label><br>
-            <input type="email" name="email">
-        </p>
-        <p>
-            <label>Phone:</label><br>
-            <input type="text" name="phone">
-        </p>
-        <p>
-            <label>Membership Type:</label><br>
-            <select name="membership_type" required>
-                <option value="">Select Type</option>
-                <option value="Basic">Basic</option>
-                <option value="Standard">Standard</option>
-                <option value="Premium">Premium</option>
-            </select>
-        </p>
-        <p>
-            <button type="submit" name="add_member">Add Member</button>
-        </p>
-    </form>
+    
+    <div class="flex min-h-screen p-8 gap-8">
+        <!-- Members List (Left Side) -->
+        <div class="w-2/3 border p-4 bg-[#222121] rounded-md">
+            <h2 class="text-xl font-bold mb-4 text-white">Search Members</h2>
+            <form method="GET" class="flex gap-4 mb-4">
+                <input type="text" name="search" placeholder="Search by name..." value="<?= htmlspecialchars($search_query) ?>" class="flex-1 px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-1 px-4 rounded">Search</button>
+                <a href="members.php" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-1 px-4 rounded">Clear</a>
+            </form>
 
-    <h2>Search Members</h2>
-    <form method="GET">
-        <input type="text" name="search" placeholder="Search by name..." value="<?= htmlspecialchars($search_query) ?>">
-        <button type="submit">Search</button>
-        <a href="members.php">Clear</a>
-    </form>
+            <h2 class="text-xl font-bold mb-4 text-white">Members List</h2>
+            <?php if (!empty($members)): ?>
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse border border-gray-700 text-white">
+                        <thead>
+                            <tr class="bg-gray-800">
+                                <th class="border border-gray-700 px-4 py-2">ID</th>
+                                <th class="border border-gray-700 px-4 py-2">Name</th>
+                                <th class="border border-gray-700 px-4 py-2">Type</th>
+                                <th class="border border-gray-700 px-4 py-2">Email</th>
+                                <th class="border border-gray-700 px-4 py-2">Phone</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($members as $member): ?>
+                            <tr class="hover:bg-gray-700">
+                                <td class="border border-gray-700 px-4 py-2"><?= $member['member_id'] ?></td>
+                                <td class="border border-gray-700 px-4 py-2"><?= $member['first_name'] . ' ' . $member['last_name'] ?></td>
+                                <td class="border border-gray-700 px-4 py-2"><?= $member['membership_type'] ?></td>
+                                <td class="border border-gray-700 px-4 py-2"><?= $member['email'] ?></td>
+                                <td class="border border-gray-700 px-4 py-2"><?= $member['phone'] ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php else: ?>
+                <p class="text-gray-400">No members found.</p>
+            <?php endif; ?>
+        </div>
 
-    <h2>Members List</h2>
-    <?php if (!empty($members)): ?>
-        <table border="1">
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Email</th>
-                <th>Phone</th>
-            </tr>
-            <?php foreach ($members as $member): ?>
-            <tr>
-                <td><?= $member['member_id'] ?></td>
-                <td><?= $member['first_name'] . ' ' . $member['last_name'] ?></td>
-                <td><?= $member['membership_type'] ?></td>
-                <td><?= $member['email'] ?></td>
-                <td><?= $member['phone'] ?></td>
-            </tr>
-            <?php endforeach; ?>
-        </table>
-    <?php else: ?>
-        <p>No members found.</p>
-    <?php endif; ?>
+        <!-- Add New Member Form (Right Side) -->
+        <div class="w-1/3 h-full border p-4 bg-[#222121] rounded-md">
+            <h2 class="text-xl font-bold mb-2 text-white">Add New Member</h2>
+            <p class="text-sm text-gray-400 mb-4">Quickly add new member to the system</p>
+            <form method="POST">
+                <div class="flex gap-4 mt-2 mb-4">
+                    <div class="flex flex-col w-1/2">
+                        <label class="mb-1 text-base font-medium text-gray-200">First Name:</label>
+                        <input placeholder="First Name" type="text" name="first_name" required class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="flex flex-col w-1/2">
+                        <label class="mb-1 text-base font-medium text-gray-200">Last Name:</label>
+                        <input placeholder="Last Name" type="text" name="last_name" required class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="mb-1 text-base font-medium text-gray-200">Email:</label>
+                    <input placeholder="youremail@email.com" type="email" name="email" class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="mb-4">
+                    <label class="mb-1 text-base font-medium text-gray-200">Phone:</label>
+                    <input placeholder="Contact Number" type="text" name="phone" class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="mb-4">
+                    <label class="mb-1 text-base font-medium text-gray-200">Membership Type:</label>
+                    <select name="membership_type" required class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Select Type</option>
+                        <option value="Basic">Basic</option>
+                        <option value="Standard">Standard</option>
+                        <option value="Premium">Premium</option>
+                    </select>
+                </div>
+                <div class="mt-4">
+                    <button type="submit" name="add_member" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded shadow transition duration-200">
+                        Add Member
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+        
+    
 </body>
 </html>

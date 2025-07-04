@@ -6,6 +6,6 @@
     <title>Training Schedule</title>
 </head>
 <body>
-    <h1>Training Schedule</h1>
+    <h1 class="text-4xl font-bold">Training Schedule</h1>
 </body>
 </html>

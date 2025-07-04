@@ -6,7 +6,7 @@
     <title>Staff Attendance</title>
 </head>
 <body>
-    <h1>Staff Attendance</h1>
+    <h1 class="text-4xl font-bold">Staff Attendance</h1>
     
 </body>
 </html>
