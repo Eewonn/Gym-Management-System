@@ -59,8 +59,8 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
             <h2 class="text-xl font-bold mb-4 text-white">Search Members</h2>
             <form method="GET" class="flex gap-4 mb-4">
                 <input type="text" name="search" placeholder="Search by name..." value="<?= htmlspecialchars($search_query) ?>" class="flex-1 px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-1 px-4 rounded">Search</button>
-                <a href="members.php" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-1 px-4 rounded">Clear</a>
+                <button type="submit" class="bg-[#800080] hover:bg-[#690069] cursor-pointer text-white font-semibold py-1 px-4 rounded">Search</button>
+                <a href="members.php" class="cursor-pointer bg-gray-600 hover:bg-gray-700 text-white font-semibold py-1 px-4 rounded">Clear</a>
             </form>
 
             <h2 class="text-xl font-bold mb-4 text-white">Members List</h2>
@@ -95,7 +95,7 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
         </div>
 
         <!-- Add New Member Form (Right Side) -->
-        <div class="w-1/3 h-full border p-4 bg-[#222121] rounded-md">
+        <div class="w-1/3 h-full border p-4 bg-[#101010] rounded-md">
             <h2 class="text-xl font-bold mb-2 text-white">Add New Member</h2>
             <p class="text-sm text-gray-400 mb-4">Quickly add new member to the system</p>
             <form method="POST">
@@ -128,7 +128,7 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
                     </select>
                 </div>
                 <div class="mt-4">
-                    <button type="submit" name="add_member" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded shadow transition duration-200">
+                    <button type="submit" name="add_member" class="w-full bg-[#800080] hover:bg-[#690069] cursor-pointer text-white font-semibold py-2 px-6 rounded shadow transition duration-200">
                         Add Member
                     </button>
                 </div>
