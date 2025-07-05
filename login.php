@@ -72,11 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
                </form>
 
 
-               <div class="datetime">
-                  <?php
-                     echo date('l jS \of F Y');
-                  ?>
-               </div>   
+               <div id="livedate"></div>
             </div>
 
             </div>
@@ -85,6 +81,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
 
         
     </div>
+
+    <script>
+      function updateDateTime() {
+         fetch('./app/includes/date.php')
+               .then(response => response.text())
+               .then(data => {
+                  document.getElementById('livedate').innerHTML = data;
+               });
+      }
+
+      // Initial load
+      updateDateTime();
+
+      // Update every second
+      setInterval(updateDateTime, 1000);
+   </script>
 </body>
 
 </html>
