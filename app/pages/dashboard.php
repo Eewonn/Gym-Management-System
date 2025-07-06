@@ -20,8 +20,11 @@ $name = $_SESSION['username'];
     <p>Welcome Back, <?php echo htmlspecialchars($name)?>!</p>
 
     <?php include 'app/includes/card.php'; ?>
-
-    <?php include 'app/includes/membershipgrowth.php'; ?>
+    <div class="flex justify-between gap-4">
+        <?php include 'app/includes/membershipgrowth.php'; ?>
+        <?php include 'app/includes/revenue.php'; ?>
+    </div>
+    
 
     
 
