@@ -12,6 +12,7 @@ $name = $_SESSION['username'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>Gym Management Dashboard</title>
 </head>
 <body>
@@ -19,5 +20,10 @@ $name = $_SESSION['username'];
     <p>Welcome Back, <?php echo htmlspecialchars($name)?>!</p>
 
     <?php include 'app/includes/card.php'; ?>
+
+    <?php include 'app/includes/membershipgrowth.php'; ?>
+
+    
+
 </body>
 </html>
