@@ -95,47 +95,94 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
         </div>
 
         <!-- Add New Member Form (Right Side) -->
-        <div class="w-1/3 h-full border p-4 bg-[#101010] rounded-md">
-            <h2 class="text-xl font-bold mb-2 text-white">Add New Member</h2>
-            <p class="text-sm text-gray-400 mb-4">Quickly add new member to the system</p>
-            <form method="POST">
-                <div class="flex gap-4 mt-2 mb-4">
-                    <div class="flex flex-col w-1/2">
-                        <label class="mb-1 text-base font-medium text-gray-200">First Name:</label>
-                        <input placeholder="First Name" type="text" name="first_name" required class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <div class="w-1/3 flex flex-col gap-8">
+            
+            <div class="h-full border p-4 bg-[#101010] rounded-md">
+                <h2 class="text-xl font-bold mb-2 text-white">Add New Member</h2>
+                <p class="text-sm text-gray-400 mb-4">Quickly add new member to the system</p>
+                <form method="POST">
+                    <div class="flex gap-4 mt-2 mb-4">
+                        <div class="flex flex-col w-1/2">
+                            <label class="mb-1 text-base font-medium text-gray-200">First Name:</label>
+                            <input placeholder="First Name" type="text" name="first_name" required class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div class="flex flex-col w-1/2">
+                            <label class="mb-1 text-base font-medium text-gray-200">Last Name:</label>
+                            <input placeholder="Last Name" type="text" name="last_name" required class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
                     </div>
-                    <div class="flex flex-col w-1/2">
-                        <label class="mb-1 text-base font-medium text-gray-200">Last Name:</label>
-                        <input placeholder="Last Name" type="text" name="last_name" required class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                </div>
 
-                <div class="mb-4">
-                    <label class="mb-1 text-base font-medium text-gray-200">Email:</label>
-                    <input placeholder="youremail@email.com" type="email" name="email" class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <div class="mb-4">
-                    <label class="mb-1 text-base font-medium text-gray-200">Phone:</label>
-                    <input placeholder="Contact Number" type="text" name="phone" class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <div class="mb-4">
-                    <label class="mb-1 text-base font-medium text-gray-200">Membership Type:</label>
-                    <select name="membership_type" required class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">Select Type</option>
-                        <option value="Basic">Basic</option>
-                        <option value="Standard">Standard</option>
-                        <option value="Premium">Premium</option>
-                    </select>
-                </div>
-                <div class="mt-4">
-                    <button type="submit" name="add_member" class="w-full bg-[#800080] hover:bg-[#690069] cursor-pointer text-white font-semibold py-2 px-6 rounded shadow transition duration-200">
-                        Add Member
-                    </button>
-                </div>
-            </form>
+                    <div class="mb-4">
+                        <label class="mb-1 text-base font-medium text-gray-200">Email:</label>
+                        <input placeholder="youremail@email.com" type="email" name="email" class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="mb-4">
+                        <label class="mb-1 text-base font-medium text-gray-200">Phone:</label>
+                        <input placeholder="Contact Number" type="text" name="phone" class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="mb-4">
+                        <label class="mb-1 text-base font-medium text-gray-200">Membership Type:</label>
+                        <select name="membership_type" required class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Select Type</option>
+                            <option value="Basic">Basic</option>
+                            <option value="Standard">Standard</option>
+                            <option value="Premium">Premium</option>
+                        </select>
+                    </div>
+                    <div class="mt-4">
+                        <button type="submit" name="add_member" class="w-full bg-[#800080] hover:bg-[#690069] cursor-pointer text-white font-semibold py-2 px-6 rounded shadow transition duration-200">
+                            Add Member
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="h-full border p-4 bg-[#101010] rounded-md>
+                <h2 class="text-xl font-bold mb-2 text-white">Edit Member</h2>
+                <p class="text-sm text-gray-400 mb-4">Update member details</p>
+                <form method="POST" action="app/includes/editmember.php">
+                    <div class="mb-4">
+                        <label class="mb-1 text-base font-medium text-gray-200">Member ID:</label>
+                        <input type="text" name="member_id" placeholder="Enter Member ID" required class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="mb-4">
+                        <label class="mb-1 text-base font-medium text-gray-200">First Name:</label>
+                        <input type="text" name="first_name" placeholder="First Name" class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="mb-4">
+                        <label class="mb-1 text-base font-medium text-gray-200">Last Name:</label>
+                        <input type="text" name="last_name" placeholder="Last Name" class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="mb-4">
+                        <label class="mb-1 text-base font-medium text-gray-200">Email:</label>
+                        <input type="email" name="email" placeholder="Email" class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="mb-4">
+                        <label class="mb-1 text-base font-medium text-gray-200">Phone:</label>
+                        <input type="text" name="phone" placeholder="Phone" class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="mb-4">
+                        <label class="mb-1 text-base font-medium text-gray-200">Membership Type:</label>
+                        <select name="membership_type" class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Select Type</option>
+                            <option value="Basic">Basic</option>
+                            <option value="Standard">Standard</option>
+                            <option value="Premium">Premium</option>
+                        </select>
+                    </div>
+                    <div class="mt-4">
+                        <button type="submit" name="edit_member" class="w-full bg-[#800080] hover:bg-[#690069] cursor-pointer text-white font-semibold py-2 px-6 rounded shadow transition duration-200">
+                            Update Member
+                        </button>
+                    </div>
+                </form>
+            </div>
+
         </div>
+
     </div>
-        
+
+    
     
 </body>
 </html>
