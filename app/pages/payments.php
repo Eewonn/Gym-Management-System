@@ -126,7 +126,7 @@ $members = $members_stmt->fetchAll(PDO::FETCH_ASSOC);
     <!-- View Payments Section -->
     <div id="viewPayments">
         <form method="GET">
-            <input class="w-1/4 px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" type="text" name="search" placeholder="Search by member name..." value="<?php echo htmlspecialchars($search_query); ?>">
+            <input class="w-1/4 px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-600" type="text" name="search" placeholder="Search by member name..." value="<?php echo htmlspecialchars($search_query); ?>">
             <button class="ml-2 bg-[#800080] hover:bg-[#690069] cursor-pointer text-white font-semibold py-1 px-4 rounded" type="submit">Search</button>
             <button class="ml-2 cursor-pointer bg-gray-600 hover:bg-gray-700 text-white font-semibold py-1 px-4 rounded" type="submit">Clear</button>
         </form>
