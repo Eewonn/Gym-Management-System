@@ -7,6 +7,6 @@
 </head>
 <body>
     <h1 class="text-4xl font-bold">Staff Attendance</h1>
-    
+    <?php include 'app/includes/staffmember.php'; ?>
 </body>
 </html>

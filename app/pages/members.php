@@ -58,7 +58,7 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
         <div class="w-2/3 border p-4 bg-[#222121] rounded-md">
             <h2 class="text-xl font-bold mb-4 text-white">Search Members</h2>
             <form method="GET" class="flex gap-4 mb-4">
-                <input type="text" name="search" placeholder="Search by name..." value="<?= htmlspecialchars($search_query) ?>" class="flex-1 px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="text" name="search" placeholder="Search by name..." value="<?= htmlspecialchars($search_query) ?>" class="flex-1 px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-600">
                 <button type="submit" class="bg-[#800080] hover:bg-[#690069] cursor-pointer text-white font-semibold py-1 px-4 rounded">Search</button>
                 <a href="members.php" class="cursor-pointer bg-gray-600 hover:bg-gray-700 text-white font-semibold py-1 px-4 rounded">Clear</a>
             </form>
@@ -104,25 +104,25 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
                     <div class="flex gap-4 mt-2 mb-4">
                         <div class="flex flex-col w-1/2">
                             <label class="mb-1 text-base font-medium text-gray-200">First Name:</label>
-                            <input placeholder="First Name" type="text" name="first_name" required class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input placeholder="First Name" type="text" name="first_name" required class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-600">
                         </div>
                         <div class="flex flex-col w-1/2">
                             <label class="mb-1 text-base font-medium text-gray-200">Last Name:</label>
-                            <input placeholder="Last Name" type="text" name="last_name" required class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input placeholder="Last Name" type="text" name="last_name" required class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-600">
                         </div>
                     </div>
 
                     <div class="mb-4">
                         <label class="mb-1 text-base font-medium text-gray-200">Email:</label>
-                        <input placeholder="youremail@email.com" type="email" name="email" class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <input placeholder="youremail@email.com" type="email" name="email" class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-600">
                     </div>
                     <div class="mb-4">
                         <label class="mb-1 text-base font-medium text-gray-200">Phone:</label>
-                        <input placeholder="Contact Number" type="text" name="phone" class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <input placeholder="Contact Number" type="text" name="phone" class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-600">
                     </div>
                     <div class="mb-4">
                         <label class="mb-1 text-base font-medium text-gray-200">Membership Type:</label>
-                        <select name="membership_type" required class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <select name="membership_type" required class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-600">
                             <option value="">Select Type</option>
                             <option value="Basic">Basic</option>
                             <option value="Standard">Standard</option>
@@ -143,27 +143,27 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
                 <form method="POST" action="app/includes/editmember.php">
                     <div class="mb-4">
                         <label class="mb-1 text-base font-medium text-gray-200">Member ID:</label>
-                        <input type="text" name="member_id" placeholder="Enter Member ID" required class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="text" name="member_id" placeholder="Enter Member ID" required class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-600">
                     </div>
                     <div class="mb-4">
                         <label class="mb-1 text-base font-medium text-gray-200">First Name:</label>
-                        <input type="text" name="first_name" placeholder="First Name" class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="text" name="first_name" placeholder="First Name" class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-600">
                     </div>
                     <div class="mb-4">
                         <label class="mb-1 text-base font-medium text-gray-200">Last Name:</label>
-                        <input type="text" name="last_name" placeholder="Last Name" class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="text" name="last_name" placeholder="Last Name" class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-600">
                     </div>
                     <div class="mb-4">
                         <label class="mb-1 text-base font-medium text-gray-200">Email:</label>
-                        <input type="email" name="email" placeholder="Email" class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="email" name="email" placeholder="Email" class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-600">
                     </div>
                     <div class="mb-4">
                         <label class="mb-1 text-base font-medium text-gray-200">Phone:</label>
-                        <input type="text" name="phone" placeholder="Phone" class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="text" name="phone" placeholder="Phone" class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-600">
                     </div>
                     <div class="mb-4">
                         <label class="mb-1 text-base font-medium text-gray-200">Membership Type:</label>
-                        <select name="membership_type" class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <select name="membership_type" class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-600">
                             <option value="">Select Type</option>
                             <option value="Basic">Basic</option>
                             <option value="Standard">Standard</option>
