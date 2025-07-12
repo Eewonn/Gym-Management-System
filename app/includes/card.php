@@ -57,7 +57,7 @@
             document.getElementById('totalRevenue').innerText = data.total_revenue !== undefined ? '₱' + data.total_revenue : 'Loading...';
         })
         .catch(error => {
-            console.error('Error fetching member count:', error);
+            console.error(error);
             document.getElementById('totalRevenue').innerText = 'Error';
         });
     }
