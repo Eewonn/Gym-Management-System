@@ -14,6 +14,10 @@ if ($_POST) {
             $_POST['status']
         ]);
         $success_message = "Payment added successfully!";
+
+        header("Location: " . $_SERVER['REQUEST_URI']);
+        exit();
+
     }
 }
 
@@ -41,6 +45,36 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
         ORDER BY p.payment_date DESC
     ");
     $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+if (isset($_POST['update_payment_id'])) {
+    $paymentId = intval($_POST['update_payment_id']);
+
+    try {
+        $stmt = $pdo->prepare("UPDATE payments SET status = 'PAID' WHERE payment_id = ?");
+        $stmt->execute([$paymentId]);
+        $success_message = "Payment status updated to PAID!";
+    } catch (PDOException $e) {
+        echo "<p style='color:red;'>Error updating payment status: " . $e->getMessage() . "</p>";
+    }
+
+    header("Location: " . $_SERVER['REQUEST_URI']);
+    exit();
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove_payment'])) {
+    $paymentId = intval($_POST['remove_payment']);
+
+    try {
+        $stmt = $pdo->prepare("DELETE FROM payments WHERE payment_id = ?");
+        $stmt->execute([$paymentId]);
+
+        $success_message = "Payment removed successfully!";
+        header("Location: " . $_SERVER['REQUEST_URI']);
+        exit();
+    } catch (PDOException $e) {
+        echo "<p style='color:red;'>Error deleting payment: " . $e->getMessage() . "</p>";
+    }
 }
 
 // Get all members for dropdown
@@ -125,34 +159,67 @@ $members = $members_stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- View Payments Section -->
     <div id="viewPayments">
-        <form method="GET">
-            <input class="w-1/4 px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-600" type="text" name="search" placeholder="Search by member name..." value="<?php echo htmlspecialchars($search_query); ?>">
-            <button class="ml-2 bg-[#800080] hover:bg-[#690069] cursor-pointer text-white font-semibold py-1 px-4 rounded" type="submit">Search</button>
-            <button class="ml-2 cursor-pointer bg-gray-600 hover:bg-gray-700 text-white font-semibold py-1 px-4 rounded" type="submit">Clear</button>
-        </form>
-
-        <h2 class="mt-4 text-xl">Payments List</h2>
+        <h2 class="text-xl font-bold mb-4 text-white">Payments List</h2>
         <?php if (!empty($payments)): ?>
-            <table border="1">
-                <tr>
-                    <th>NAME</th>
-                    <th>TYPE</th>
-                    <th>AMOUNT</th>
-                    <th>STATUS</th>
-                </tr>
-                <?php foreach ($payments as $payment): ?>
-                <tr>
-                    <td><?= $payment['first_name'] . ' ' . $payment['last_name'] ?></td>
-                    <td><?= $payment['payment_type'] ?></td>
-                    <td><?= $payment['amount'] ?></td>
-                    <td><?= $payment['status'] ?></td>
-                </tr>
-                <?php endforeach; ?>
-            </table>
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse border border-gray-700 text-white">
+                    <thead>
+                        <tr class="bg-gray-800">
+                            <th class="border border-gray-700 px-4 py-2">Name</th>
+                            <th class="border border-gray-700 px-4 py-2">Type</th>
+                            <th class="border border-gray-700 px-4 py-2">Amount</th>
+                            <th class="border border-gray-700 px-4 py-2">Status</th>
+                            <th class="border border-gray-700 px-4 py-2">Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($payments as $payment): ?>
+                            <tr class="hover:bg-gray-700">
+                                <td class="border border-gray-700 px-4 py-2">
+                                    <?= htmlspecialchars($payment['first_name'] . ' ' . $payment['last_name']) ?>
+                                </td>
+                                <td class="border border-gray-700 px-4 py-2">
+                                    <?= htmlspecialchars($payment['payment_type']) ?>
+                                </td>
+                                <td class="border border-gray-700 px-4 py-2">
+                                    <?= htmlspecialchars($payment['amount']) ?>
+                                </td>
+                               <td class="border border-gray-700 py-2 whitespace-nowrap text-center align-middle">
+                                <?php if ($payment['status'] === 'PENDING'): ?>
+                                    <form method="POST" action="">
+                                        <input type="hidden" name="update_payment_id" value="<?= $payment['payment_id'] ?>">
+                                        <button type="submit" class="bg-gray-600 hover:bg-gray-700 cursor-pointer object-cover text-white font-bold px-4 py-1 rounded shadow transition">
+                                            PENDING
+                                        </button>
+                                    </form>
+                                <?php else: ?>
+                                    <button type="button" style="background-color: #347433" class="bg-[#347433] text-white font-bold px-4 py-1 rounded shadow cursor-default">
+                                        PAID
+                                    </button>
+                                <?php endif; ?>
+                            </td>
+                            <td class="border border-gray-700 py-2 whitespace-nowrap text-center align-middle">
+                                <form method="POST" action="">
+                                    <input type="hidden" name="remove_payment" value="<?= $payment['payment_id'] ?>">
+                                        <button type="submit" 
+                                        style="background-color: #722323;"  
+                                        class="bg-[#722323] cursor-pointer text-white font-bold px-4 py-1 rounded shadow transition"
+                                        onclick="return confirm('Are you sure you want to remove this payment?')" >
+                                        Remove
+                                    </button>
+                                </form>
+                            </td>
+
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
         <?php else: ?>
-            <p>No payments found.</p>
+            <p class="text-gray-400">No payments found.</p>
         <?php endif; ?>
     </div>
+
 
     <script>
         function showAddForm() {
@@ -172,6 +239,39 @@ $members = $members_stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // Show view payments by default
         showViewPayments();
+
+        
+        function fetchTotalRevenue(){
+            fetch('app/includes/totalrevenue.php')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('totalRevenue').innerText = data.total_revenue !== undefined ? '₱' + data.total_revenue : 'Loading...';
+            })
+            .catch(error => {
+                console.error(error);
+                document.getElementById('totalRevenue').innerText = 'Error';
+            });
+        }
+        
+        fetchTotalRevenue();
+
+        setInterval(fetchTotalRevenue, 5000); // Refresh every minute
+
+        function fetchTotalPending(){
+            fetch('app/includes/pendingbalance.php')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('totalPending').innerText = data.total_pending_balance !== undefined ? '₱' + data.total_pending_balance : 'Loading...';
+            })
+            .catch(error => {
+                console.error(error);
+                document.getElementById('totalPending').innerText = 'Error';
+            });
+        }
+        
+        fetchTotalPending();
+
+        setInterval(fetchTotalPending, 5000); // Refresh every minute
     </script>
 </body>
 </html>
