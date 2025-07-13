@@ -6,18 +6,19 @@ require_once __DIR__ . '/../../db/db.php';
 if ($_POST) {
     if (isset($_POST['add_payment'])) {
         // Add new payment
-        $stmt = $pdo->prepare("INSERT INTO payments (member_id, amount, payment_type, status) VALUES (?, ?, ?, ?)");
+        $payment_date = ($_POST['status'] === 'PAID') ? date('Y-m-d') : null;
+        $stmt = $pdo->prepare("INSERT INTO payments (member_id, amount, payment_type, status, payment_date) VALUES (?, ?, ?, ?, ?)");
         $stmt->execute([
             $_POST['member_id'],
             $_POST['amount'], 
             $_POST['payment_type'],
-            $_POST['status']
+            $_POST['status'],
+            $payment_date
         ]);
         $success_message = "Payment added successfully!";
 
         header("Location: " . $_SERVER['REQUEST_URI']);
         exit();
-
     }
 }
 
@@ -51,7 +52,7 @@ if (isset($_POST['update_payment_id'])) {
     $paymentId = intval($_POST['update_payment_id']);
 
     try {
-        $stmt = $pdo->prepare("UPDATE payments SET status = 'PAID' WHERE payment_id = ?");
+        $stmt = $pdo->prepare("UPDATE payments SET status = 'PAID', payment_date = CURDATE() WHERE payment_id = ?");
         $stmt->execute([$paymentId]);
         $success_message = "Payment status updated to PAID!";
     } catch (PDOException $e) {
@@ -188,7 +189,9 @@ $members = $members_stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <?php if ($payment['status'] === 'PENDING'): ?>
                                     <form method="POST" action="">
                                         <input type="hidden" name="update_payment_id" value="<?= $payment['payment_id'] ?>">
-                                        <button type="submit" class="bg-gray-600 hover:bg-gray-700 cursor-pointer object-cover text-white font-bold px-4 py-1 rounded shadow transition">
+                                        <button type="submit" 
+                                        class="bg-gray-600 hover:bg-gray-700 cursor-pointer object-cover text-white font-bold px-4 py-1 rounded shadow transition"
+                                        onclick="return confirm('Are you sure you want to confirm this payment?')" >
                                             PENDING
                                         </button>
                                     </form>
