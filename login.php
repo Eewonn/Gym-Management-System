@@ -37,8 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
 
 
         <div class="flex-1 relative">
-            <img src="assets/img/gym-bg.jpg" alt="Gym Background" class="w-full h-full object-cover" />
-            <div class="absolute top-1/5 left-10 text-white">
+            <img src="assets/img/gym-bg.jpg" alt="Gym Background" class="w-full h-full" />
+            <div class="absolute inset-0 ml-20 flex flex-col justify-center items-left text-white">
                 <h1 class="mb-5 text-6xl font-bold">MANAGE</h1>
                 <h1 class="mb-5 text-6xl font-bold">MOTIVATE</h1>
                 <h1 class="mb-5 text-6xl font-bold">MAINTAIN</h1>
