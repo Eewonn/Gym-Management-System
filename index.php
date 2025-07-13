@@ -28,7 +28,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != 1) {
             <?php
                 $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
 
-                $allowed_pages = ['dashboard', 'members', 'payments', 'staff_attendance', 'training_schedule', 'reports'];
+                $allowed_pages = ['dashboard', 'members', 'payments', 'staff_attendance', 'training_schedule'];
 
                 if (in_array($page, $allowed_pages)) {
                     include 'app/pages/' . $page . '.php';

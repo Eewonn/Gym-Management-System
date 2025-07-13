@@ -178,7 +178,7 @@ $days_of_week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturd
     <title>Training Schedule</title>
 </head>
 <body>
-    <h1>Training Schedule Management</h1>
+    <h1 class="text-4xl font-bold">Training Schedule Management</h1>
     
     <?php if (isset($success_message)): ?>
         <div>
@@ -193,88 +193,103 @@ $days_of_week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturd
     <?php endif; ?>
 
     <!-- Navigation -->
-    <div>
-        <button onclick="showSection('schedule')" style="border: 1px solid #000; padding: 8px 12px; margin: 5px;">Today's Schedule</button>
-        <button onclick="showSection('classes')" style="border: 1px solid #000; padding: 8px 12px; margin: 5px;">Manage Classes</button>
-        <button onclick="showSection('trainers')" style="border: 1px solid #000; padding: 8px 12px; margin: 5px;">Manage Trainers</button>
-        <button onclick="showSection('bookings')" style="border: 1px solid #000; padding: 8px 12px; margin: 5px;">Book Classes</button>
-        <button onclick="showSection('personal')" style="border: 1px solid #000; padding: 8px 12px; margin: 5px;">Personal Training</button>
+    <div class="flex gap-4 my-6 mt-4 mb-4">
+        <button onclick="showSection('schedule')" class="bg-[#800080] font-semibold hover:bg-[#690069] text-white px-4 py-2 rounded shadow cursor-pointer transition">Today's Schedule</button>
+        <button onclick="showSection('classes')" class="bg-[#800080] font-semibold hover:bg-[#690069] text-white px-4 py-2 rounded shadow cursor-pointer transition">Manage Classes</button>
+        <button onclick="showSection('trainers')" class="bg-[#800080] font-semibold hover:bg-[#690069] text-white px-4 py-2 rounded shadow cursor-pointer transition">Manage Trainers</button>
+        <button onclick="showSection('bookings')" class="bg-[#800080] font-semibold hover:bg-[#690069] text-white px-4 py-2 rounded shadow cursor-pointer transition">Book Classes</button>
+        <button onclick="showSection('personal')" class="bg-[#800080] font-semibold hover:bg-[#690069] text-white px-4 py-2 rounded shadow cursor-pointer transition">Personal Training</button>
     </div>
 
     <!-- Today's Schedule Section -->
-    <div id="schedule">
-        <h2>Today's Schedule (<?= date('F j, Y') ?> - <?= $today_day ?>)</h2>
+    <div id="schedule" class="block bg-[#101010] rounded-2xl p-6 border border-[#585757]">
+        <h2 class="text-2xl font-bold mb-2">
+            Today's Schedule (<?= date('F j, Y') ?> - <?= $today_day ?>)
+        </h2>
         
-        <h3>Group Classes</h3>
+        <h3 class="mt-6 mb-2 text-lg font-semibold">Group Classes</h3>
         <?php if (!empty($todays_classes)): ?>
-            <table border="1">
-                <tr>
-                    <th>Class Name</th>
-                    <th>Trainer</th>
-                    <th>Time</th>
-                    <th>Type</th>
-                    <th>Bookings</th>
-                    <th>Difficulty</th>
-                </tr>
+            <table class="min-w-full border border-gray-300 rounded-lg overflow-hidden mb-6">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="px-4 py-2 text-left">Class Name</th>
+                        <th class="px-4 py-2 text-left">Trainer</th>
+                        <th class="px-4 py-2 text-left">Time</th>
+                        <th class="px-4 py-2 text-left">Type</th>
+                        <th class="px-4 py-2 text-left">Bookings</th>
+                        <th class="px-4 py-2 text-left">Difficulty</th>
+                    </tr>
+                </thead>
+                <tbody>
                 <?php foreach ($todays_classes as $class): ?>
-                <tr>
-                    <td><?= htmlspecialchars($class['class_name']) ?></td>
-                    <td><?= htmlspecialchars($class['trainer_first_name'] . ' ' . $class['trainer_last_name']) ?></td>
-                    <td><?= date('g:i A', strtotime($class['start_time'])) ?> - <?= date('g:i A', strtotime($class['end_time'])) ?></td>
-                    <td><?= htmlspecialchars($class['class_type']) ?></td>
-                    <td><?= $class['current_bookings'] ?>/<?= $class['max_capacity'] ?></td>
-                    <td><?= ucfirst($class['difficulty_level']) ?></td>
-                </tr>
+                    <tr class="border-t">
+                        <td class="px-4 py-2"><?= htmlspecialchars($class['class_name']) ?></td>
+                        <td class="px-4 py-2"><?= htmlspecialchars($class['trainer_first_name'] . ' ' . $class['trainer_last_name']) ?></td>
+                        <td class="px-4 py-2"><?= date('g:i A', strtotime($class['start_time'])) ?> - <?= date('g:i A', strtotime($class['end_time'])) ?></td>
+                        <td class="px-4 py-2"><?= htmlspecialchars($class['class_type']) ?></td>
+                        <td class="px-4 py-2"><?= $class['current_bookings'] ?>/<?= $class['max_capacity'] ?></td>
+                        <td class="px-4 py-2"><?= ucfirst($class['difficulty_level']) ?></td>
+                    </tr>
                 <?php endforeach; ?>
+                </tbody>
             </table>
         <?php else: ?>
-            <p>No classes scheduled for today.</p>
+            <p class="text-gray-500">No classes scheduled for today.</p>
         <?php endif; ?>
 
-        <h3>Personal Training Sessions</h3>
+        <h3 class="mt-6 mb-2 text-lg font-semibold">Personal Training Sessions</h3>
         <?php if (!empty($todays_personal_sessions)): ?>
-            <table border="1">
-                <tr>
-                    <th>Session Type</th>
-                    <th>Trainer</th>
-                    <th>Member</th>
-                    <th>Time</th>
-                    <th>Price</th>
-                </tr>
+            <table class="min-w-full border border-gray-300 rounded-lg overflow-hidden">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="px-4 py-2 text-left">Session Type</th>
+                        <th class="px-4 py-2 text-left">Trainer</th>
+                        <th class="px-4 py-2 text-left">Member</th>
+                        <th class="px-4 py-2 text-left">Time</th>
+                        <th class="px-4 py-2 text-left">Price</th>
+                    </tr>
+                </thead>
+                <tbody>
                 <?php foreach ($todays_personal_sessions as $session): ?>
-                <tr>
-                    <td><?= htmlspecialchars($session['session_type']) ?></td>
-                    <td><?= htmlspecialchars($session['trainer_first_name'] . ' ' . $session['trainer_last_name']) ?></td>
-                    <td><?= htmlspecialchars($session['member_first_name'] . ' ' . $session['member_last_name']) ?></td>
-                    <td><?= date('g:i A', strtotime($session['start_time'])) ?> - <?= date('g:i A', strtotime($session['end_time'])) ?></td>
-                    <td>$<?= number_format($session['session_price'], 2) ?></td>
-                </tr>
+                    <tr class="border-t">
+                        <td class="px-4 py-2"><?= htmlspecialchars($session['session_type']) ?></td>
+                        <td class="px-4 py-2"><?= htmlspecialchars($session['trainer_first_name'] . ' ' . $session['trainer_last_name']) ?></td>
+                        <td class="px-4 py-2"><?= htmlspecialchars($session['member_first_name'] . ' ' . $session['member_last_name']) ?></td>
+                        <td class="px-4 py-2"><?= date('g:i A', strtotime($session['start_time'])) ?> - <?= date('g:i A', strtotime($session['end_time'])) ?></td>
+                        <td class="px-4 py-2">$<?= number_format($session['session_price'], 2) ?></td>
+                    </tr>
                 <?php endforeach; ?>
+                </tbody>
             </table>
         <?php else: ?>
-            <p>No personal training sessions today.</p>
+            <p class="text-gray-500">No personal training sessions today.</p>
         <?php endif; ?>
     </div>
 
     <!-- Manage Classes Section -->
-    <div id="classes" style="display: none;">
-        <h2>Manage Training Classes</h2>
-        
-        <h3>Add New Class</h3>
-        <form method="POST">
-            <table>
-                <tr>
-                    <td>Class Name:</td>
-                    <td><input type="text" name="class_name" placeholder="Enter class name" required></td>
-                </tr>
-                <tr>
-                    <td>Description:</td>
-                    <td><textarea name="description" rows="3" placeholder="Class description..."></textarea></td>
-                </tr>
-                <tr>
-                    <td>Trainer:</td>
-                    <td>
-                        <select name="trainer_id" required>
+    <div id="classes" class="bg-[#101010] rounded-2xl p-6 text-white border border-[#585757]">
+        <h2 class="text-xl font-bold">Manage Training Classes</h2>
+
+        <div class="mt-6">
+            
+            <form method="POST" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Class Name -->
+                    <div class="space-y-2">
+                        <label class="block mb-2 mt-2 font-semibold">Class Name:</label>
+                        <input type="text" name="class_name" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter class name" required>
+                    </div>
+
+                    <!-- Description -->
+                    <div>
+                        <label class="block mb-2 mt-2 font-semibold">Description:</label>
+                        <textarea name="description" rows="3" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Class description..."></textarea>
+                    </div>
+
+                    <!-- Trainer -->
+                    <div>
+                        <label class="block mb-2 mt-2 font-semibold">Trainer:</label>
+                        <select name="trainer_id" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700" required>
                             <option value="">Select Trainer</option>
                             <?php foreach ($trainers as $trainer): ?>
                                 <option value="<?= $trainer['trainer_id'] ?>">
@@ -282,35 +297,41 @@ $days_of_week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturd
                                 </option>
                             <?php endforeach; ?>
                         </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Day of Week:</td>
-                    <td>
-                        <select name="day_of_week" required>
+                    </div>
+
+                    <!-- Day of Week -->
+                    <div>
+                        <label class="block mb-2 mt-2 font-semibold">Day of Week:</label>
+                        <select name="day_of_week" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700" required>
                             <option value="">Select Day</option>
                             <?php foreach ($days_of_week as $day): ?>
                                 <option value="<?= $day ?>"><?= $day ?></option>
                             <?php endforeach; ?>
                         </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Start Time:</td>
-                    <td><input type="time" name="start_time" required></td>
-                </tr>
-                <tr>
-                    <td>End Time:</td>
-                    <td><input type="time" name="end_time" required></td>
-                </tr>
-                <tr>
-                    <td>Max Capacity:</td>
-                    <td><input type="number" name="max_capacity" value="20" min="1" max="50" required></td>
-                </tr>
-                <tr>
-                    <td>Class Type:</td>
-                    <td>
-                        <select name="class_type" required>
+                    </div>
+
+                    <!-- Start Time -->
+                    <div>
+                        <label class="block mb-2 mt-2 font-semibold">Start Time:</label>
+                        <input type="time" name="start_time" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700" required>
+                    </div>
+
+                    <!-- End Time -->
+                    <div>
+                        <label class="block mb-2 mt-2 font-semibold">End Time:</label>
+                        <input type="time" name="end_time" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700" required>
+                    </div>
+
+                    <!-- Max Capacity -->
+                    <div>
+                        <label class="block mb-2 mt-2 font-semibold">Max Capacity:</label>
+                        <input type="number" name="max_capacity" value="20" min="1" max="50" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700" required>
+                    </div>
+
+                    <!-- Class Type -->
+                    <div>
+                        <label class="block mb-2 mt-2 font-semibold">Class Type:</label>
+                        <select name="class_type" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700" required>
                             <option value="">Select Type</option>
                             <option value="Cardio">Cardio</option>
                             <option value="Strength">Strength</option>
@@ -321,275 +342,303 @@ $days_of_week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturd
                             <option value="Zumba">Zumba</option>
                             <option value="Spinning">Spinning</option>
                         </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Difficulty:</td>
-                    <td>
-                        <select name="difficulty_level" required>
+                    </div>
+
+                    <!-- Difficulty -->
+                    <div>
+                        <label class="block mb-2 mt-2 font-semibold">Difficulty:</label>
+                        <select name="difficulty_level" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700" required>
                             <option value="beginner">Beginner</option>
                             <option value="intermediate">Intermediate</option>
                             <option value="advanced">Advanced</option>
                         </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Price ($):</td>
-                    <td><input type="number" name="price" step="0.01" min="0" value="15.00"></td>
-                </tr>
-                <tr>
-                    <td>Equipment Needed:</td>
-                    <td><input type="text" name="equipment_needed" placeholder="e.g. Yoga mats, dumbbells"></td>
-                </tr>
-                <tr>
-                    <td colspan="2"><input type="submit" name="add_class" value="Add Class" style="border: 1px solid #000; padding: 5px 10px;"></td>
-                </tr>
-            </table>
-        </form>
+                    </div>
 
-        <h3>Current Classes</h3>
-        <?php if (!empty($training_classes)): ?>
-            <table border="1">
-                <tr>
-                    <th>Class Name</th>
-                    <th>Day</th>
-                    <th>Time</th>
-                    <th>Trainer</th>
-                    <th>Type</th>
-                    <th>Capacity</th>
-                    <th>Price</th>
-                    <th>Difficulty</th>
-                </tr>
-                <?php foreach ($training_classes as $class): ?>
-                <tr>
-                    <td><?= htmlspecialchars($class['class_name']) ?></td>
-                    <td><?= $class['day_of_week'] ?></td>
-                    <td><?= date('g:i A', strtotime($class['start_time'])) ?>-<?= date('g:i A', strtotime($class['end_time'])) ?></td>
-                    <td><?= htmlspecialchars($class['trainer_first_name'] . ' ' . $class['trainer_last_name']) ?></td>
-                    <td><?= htmlspecialchars($class['class_type']) ?></td>
-                    <td><?= $class['max_capacity'] ?></td>
-                    <td>$<?= number_format($class['price'], 2) ?></td>
-                    <td><?= ucfirst($class['difficulty_level']) ?></td>
-                </tr>
-                <?php endforeach; ?>
-            </table>
-        <?php else: ?>
-            <p>No classes available.</p>
-        <?php endif; ?>
+                    <!-- Price -->
+                    <div>
+                        <label class="block mb-2 mt-2 font-semibold">Price ($):</label>
+                        <input type="number" name="price" step="0.01" min="0" value="15.00" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700">
+                    </div>
+
+                    <!-- Equipment -->
+                    <div>
+                        <label class="block mb-2 mt-2 font-semibold">Equipment Needed:</label>
+                        <input type="text" name="equipment_needed" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700" placeholder="e.g. Yoga mats, dumbbells">
+                    </div>
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" name="add_class" class="bg-[#800080] font-semibold hover:bg-[#690069] cursor-pointer text-white font-semibold px-6 py-2 rounded-lg shadow">
+                        Add Class
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="w-full h-px mt-8 my-8 bg-[#585757] rounded-2xl border border-[#585757]"></div>
+        <div class="mt-8">
+            <h3 class="text-lg font-semibold mt-2 mb-2">Current Classes</h3>
+
+            <?php if (!empty($training_classes)): ?>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left border border-gray-700 bg-gray-900 text-white rounded-lg">
+                        <thead class="bg-gray-800 text-gray-300">
+                            <tr>
+                                <th class="px-4 py-2">Class Name</th>
+                                <th class="px-4 py-2">Day</th>
+                                <th class="px-4 py-2">Time</th>
+                                <th class="px-4 py-2">Trainer</th>
+                                <th class="px-4 py-2">Type</th>
+                                <th class="px-4 py-2">Capacity</th>
+                                <th class="px-4 py-2">Price</th>
+                                <th class="px-4 py-2">Difficulty</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($training_classes as $class): ?>
+                            <tr class="border-t border-gray-700 hover:bg-gray-800">
+                                <td class="px-4 py-2"><?= htmlspecialchars($class['class_name']) ?></td>
+                                <td class="px-4 py-2"><?= $class['day_of_week'] ?></td>
+                                <td class="px-4 py-2"><?= date('g:i A', strtotime($class['start_time'])) ?>–<?= date('g:i A', strtotime($class['end_time'])) ?></td>
+                                <td class="px-4 py-2"><?= htmlspecialchars($class['trainer_first_name'] . ' ' . $class['trainer_last_name']) ?></td>
+                                <td class="px-4 py-2"><?= htmlspecialchars($class['class_type']) ?></td>
+                                <td class="px-4 py-2"><?= $class['max_capacity'] ?></td>
+                                <td class="px-4 py-2">$<?= number_format($class['price'], 2) ?></td>
+                                <td class="px-4 py-2"><?= ucfirst($class['difficulty_level']) ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php else: ?>
+                <p class="text-gray-400">No classes available.</p>
+            <?php endif; ?>
+        </div>
     </div>
+ 
 
     <!-- Manage Trainers Section -->
-    <div id="trainers" style="display: none;">
-        <h2>Manage Trainers</h2>
+    <div id="trainers" class="bg-[#101010] rounded-2xl p-6 text-white border border-[#585757]" style="display: none;">
+        <h2 class="text-xl font-bold mb-4">Manage Trainers</h2>
         
-        <h3>Add New Trainer</h3>
-        <form method="POST">
-            <table>
-                <tr>
-                    <td>First Name:</td>
-                    <td><input type="text" name="first_name" placeholder="First name" required></td>
-                </tr>
-                <tr>
-                    <td>Last Name:</td>
-                    <td><input type="text" name="last_name" placeholder="Last name" required></td>
-                </tr>
-                <tr>
-                    <td>Email:</td>
-                    <td><input type="email" name="email" placeholder="email@example.com" required></td>
-                </tr>
-                <tr>
-                    <td>Phone:</td>
-                    <td><input type="tel" name="phone" placeholder="Phone number"></td>
-                </tr>
-                <tr>
-                    <td>Specialization:</td>
-                    <td><textarea name="specialization" rows="2" cols="30" placeholder="e.g. Strength Training, Yoga"></textarea></td>
-                </tr>
-                <tr>
-                    <td>Experience (Years):</td>
-                    <td><input type="number" name="experience_years" min="0" value="0"></td>
-                </tr>
-                <tr>
-                    <td>Certification:</td>
-                    <td><input type="text" name="certification" placeholder="e.g. NASM, ACE, ACSM"></td>
-                </tr>
-                <tr>
-                    <td>Hourly Rate ($):</td>
-                    <td><input type="number" name="hourly_rate" step="0.01" min="0" value="50.00" placeholder="50.00"></td>
-                </tr>
-                <tr>
-                    <td colspan="2"><input type="submit" name="add_trainer" value="Add Trainer" style="border: 1px solid #000; padding: 5px 10px;"></td>
-                </tr>
-            </table>
+        <h3 class="text-lg font-semibold mb-2">Add New Trainer</h3>
+        <form method="POST" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block mb-2 font-semibold">First Name:</label>
+                    <input type="text" name="first_name" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="First name" required>
+                </div>
+                <div>
+                    <label class="block mb-2 font-semibold">Last Name:</label>
+                    <input type="text" name="last_name" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Last name" required>
+                </div>
+                <div>
+                    <label class="block mb-2 font-semibold">Email:</label>
+                    <input type="email" name="email" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="email@example.com" required>
+                </div>
+                <div>
+                    <label class="block mb-2 font-semibold">Phone:</label>
+                    <input type="tel" name="phone" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700" placeholder="Phone number">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block mb-2 font-semibold">Specialization:</label>
+                    <textarea name="specialization" rows="2" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700" placeholder="e.g. Strength Training, Yoga"></textarea>
+                </div>
+                <div>
+                    <label class="block mb-2 font-semibold">Experience (Years):</label>
+                    <input type="number" name="experience_years" min="0" value="0" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700">
+                </div>
+                <div>
+                    <label class="block mb-2 font-semibold">Certification:</label>
+                    <input type="text" name="certification" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700" placeholder="e.g. NASM, ACE, ACSM">
+                </div>
+                <div>
+                    <label class="block mb-2 font-semibold">Hourly Rate ($):</label>
+                    <input type="number" name="hourly_rate" step="0.01" min="0" value="50.00" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700" placeholder="50.00">
+                </div>
+            </div>
+            <div class="pt-4">
+                <button type="submit" name="add_trainer" class="bg-[#800080] font-semibold hover:bg-[#690069] cursor-pointer text-white px-6 py-2 rounded-lg shadow">
+                    Add Trainer
+                </button>
+            </div>
         </form>
 
-        <h3>Current Trainers</h3>
+        <div class="w-full h-px mt-8 my-8 bg-[#585757] rounded-2xl border border-[#585757]"></div>
+        <h3 class="text-lg font-semibold mt-2 mb-2">Current Trainers</h3>
         <?php if (!empty($trainers)): ?>
-            <table border="1">
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Experience</th>
-                    <th>Rate/Hour</th>
-                    <th>Specialization</th>
-                </tr>
-                <?php foreach ($trainers as $trainer): ?>
-                <tr>
-                    <td><?= htmlspecialchars($trainer['first_name'] . ' ' . $trainer['last_name']) ?></td>
-                    <td><?= htmlspecialchars($trainer['email']) ?></td>
-                    <td><?= $trainer['experience_years'] ?> years</td>
-                    <td>$<?= number_format($trainer['hourly_rate'], 2) ?></td>
-                    <td><?= htmlspecialchars($trainer['specialization']) ?></td>
-                </tr>
-                <?php endforeach; ?>
-            </table>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left border border-gray-700 bg-gray-900 text-white rounded-lg">
+                    <thead class="bg-gray-800 text-gray-300">
+                        <tr>
+                            <th class="px-4 py-2">Name</th>
+                            <th class="px-4 py-2">Email</th>
+                            <th class="px-4 py-2">Experience</th>
+                            <th class="px-4 py-2">Rate/Hour</th>
+                            <th class="px-4 py-2">Specialization</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($trainers as $trainer): ?>
+                        <tr class="border-t border-gray-700 hover:bg-gray-800">
+                            <td class="px-4 py-2"><?= htmlspecialchars($trainer['first_name'] . ' ' . $trainer['last_name']) ?></td>
+                            <td class="px-4 py-2"><?= htmlspecialchars($trainer['email']) ?></td>
+                            <td class="px-4 py-2"><?= $trainer['experience_years'] ?> years</td>
+                            <td class="px-4 py-2">$<?= number_format($trainer['hourly_rate'], 2) ?></td>
+                            <td class="px-4 py-2"><?= htmlspecialchars($trainer['specialization']) ?></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
         <?php else: ?>
-            <p>No trainers available.</p>
+            <p class="text-gray-400">No trainers available.</p>
         <?php endif; ?>
     </div>
 
     <!-- Book Classes Section -->
-    <div id="bookings" style="display: none;">
-        <h2>Book Classes</h2>
+    <div id="bookings" class="bg-[#101010] rounded-2xl p-6 text-white border border-[#585757]" style="display: none;">
+        <h2 class="text-xl font-bold mb-4">Book Classes</h2>
         
-        <h3>Book Class for Member</h3>
-        <form method="POST">
-            <table>
-                <tr>
-                    <td>Member:</td>
-                    <td>
-                        <select name="member_id" required>
-                            <option value="">Select Member</option>
-                            <?php foreach ($members as $member): ?>
-                                <option value="<?= $member['member_id'] ?>">
-                                    <?= htmlspecialchars($member['first_name'] . ' ' . $member['last_name'] . ' (' . $member['email'] . ')') ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Class:</td>
-                    <td>
-                        <select name="class_id" required>
-                            <option value="">Select Class</option>
-                            <?php foreach ($training_classes as $class): ?>
-                                <option value="<?= $class['class_id'] ?>">
-                                    <?= htmlspecialchars($class['class_name']) ?> - <?= $class['day_of_week'] ?> <?= date('g:i A', strtotime($class['start_time'])) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Class Date:</td>
-                    <td><input type="date" name="class_date" min="<?= $today ?>" required></td>
-                </tr>
-                <tr>
-                    <td>Notes:</td>
-                    <td><textarea name="notes" rows="3" cols="30" placeholder="Optional notes..."></textarea></td>
-                </tr>
-                <tr>
-                    <td colspan="2"><input type="submit" name="book_class" value="Book Class" style="border: 1px solid #000; padding: 5px 10px;"></td>
-                </tr>
-            </table>
+        <h3 class="text-lg font-semibold mb-2">Book Class for Member</h3>
+        <form method="POST" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block mb-2 font-semibold">Member:</label>
+                    <select name="member_id" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700" required>
+                        <option value="">Select Member</option>
+                        <?php foreach ($members as $member): ?>
+                            <option value="<?= $member['member_id'] ?>">
+                                <?= htmlspecialchars($member['first_name'] . ' ' . $member['last_name'] . ' (' . $member['email'] . ')') ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div>
+                    <label class="block mb-2 font-semibold">Class:</label>
+                    <select name="class_id" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700" required>
+                        <option value="">Select Class</option>
+                        <?php foreach ($training_classes as $class): ?>
+                            <option value="<?= $class['class_id'] ?>">
+                                <?= htmlspecialchars($class['class_name']) ?> - <?= $class['day_of_week'] ?> <?= date('g:i A', strtotime($class['start_time'])) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div>
+                    <label class="block mb-2 font-semibold">Class Date:</label>
+                    <input type="date" name="class_date" min="<?= $today ?>" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700" required>
+                </div>
+                <div>
+                    <label class="block mb-2 font-semibold">Notes:</label>
+                    <textarea name="notes" rows="3" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700" placeholder="Optional notes..."></textarea>
+                </div>
+            </div>
+            <div class="pt-4">
+                <button type="submit" name="book_class" class="bg-[#800080] font-semibold hover:bg-[#690069] cursor-pointer text-white px-6 py-2 rounded-lg shadow">
+                    Book Class
+                </button>
+            </div>
         </form>
 
-        <h3>Upcoming Bookings</h3>
+        <div class="w-full h-px mt-8 my-8 bg-[#585757] rounded-2xl border border-[#585757]"></div>
+        <h3 class="text-lg font-semibold mt-2 mb-2">Upcoming Bookings</h3>
         <?php if (!empty($upcoming_bookings)): ?>
-            <table border="1">
-                <tr>
-                    <th>Class</th>
-                    <th>Member</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Trainer</th>
-                    <th>Status</th>
-                </tr>
-                <?php foreach ($upcoming_bookings as $booking): ?>
-                <tr>
-                    <td><?= htmlspecialchars($booking['class_name']) ?></td>
-                    <td><?= htmlspecialchars($booking['member_first_name'] . ' ' . $booking['member_last_name']) ?></td>
-                    <td><?= date('M j, Y', strtotime($booking['class_date'])) ?></td>
-                    <td><?= date('g:i A', strtotime($booking['start_time'])) ?> - <?= date('g:i A', strtotime($booking['end_time'])) ?></td>
-                    <td><?= htmlspecialchars($booking['trainer_first_name'] . ' ' . $booking['trainer_last_name']) ?></td>
-                    <td><?= ucfirst($booking['status']) ?></td>
-                </tr>
-                <?php endforeach; ?>
-            </table>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left border border-gray-700 bg-gray-900 text-white rounded-lg">
+                    <thead class="bg-gray-800 text-gray-300">
+                        <tr>
+                            <th class="px-4 py-2">Class</th>
+                            <th class="px-4 py-2">Member</th>
+                            <th class="px-4 py-2">Date</th>
+                            <th class="px-4 py-2">Time</th>
+                            <th class="px-4 py-2">Trainer</th>
+                            <th class="px-4 py-2">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($upcoming_bookings as $booking): ?>
+                        <tr class="border-t border-gray-700 hover:bg-gray-800">
+                            <td class="px-4 py-2"><?= htmlspecialchars($booking['class_name']) ?></td>
+                            <td class="px-4 py-2"><?= htmlspecialchars($booking['member_first_name'] . ' ' . $booking['member_last_name']) ?></td>
+                            <td class="px-4 py-2"><?= date('M j, Y', strtotime($booking['class_date'])) ?></td>
+                            <td class="px-4 py-2"><?= date('g:i A', strtotime($booking['start_time'])) ?> - <?= date('g:i A', strtotime($booking['end_time'])) ?></td>
+                            <td class="px-4 py-2"><?= htmlspecialchars($booking['trainer_first_name'] . ' ' . $booking['trainer_last_name']) ?></td>
+                            <td class="px-4 py-2"><?= ucfirst($booking['status']) ?></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
         <?php else: ?>
-            <p>No upcoming bookings.</p>
+            <p class="text-gray-400">No upcoming bookings.</p>
         <?php endif; ?>
     </div>
 
     <!-- Personal Training Section -->
-    <div id="personal" style="display: none;">
-        <h2>Personal Training</h2>
+    <div id="personal" class="bg-[#101010] rounded-2xl p-6 text-white border border-[#585757]" style="display: none;">
+        <h2 class="text-xl font-bold mb-4">Personal Training</h2>
         
-        <h3>Schedule Personal Training Session</h3>
-        <form method="POST">
-            <table>
-                <tr>
-                    <td>Trainer:</td>
-                    <td>
-                        <select name="trainer_id" required>
-                            <option value="">Select Trainer</option>
-                            <?php foreach ($trainers as $trainer): ?>
-                                <option value="<?= $trainer['trainer_id'] ?>">
-                                    <?= htmlspecialchars($trainer['first_name'] . ' ' . $trainer['last_name']) ?> - $<?= number_format($trainer['hourly_rate'], 2) ?>/hr
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Member:</td>
-                    <td>
-                        <select name="member_id" required>
-                            <option value="">Select Member</option>
-                            <?php foreach ($members as $member): ?>
-                                <option value="<?= $member['member_id'] ?>">
-                                    <?= htmlspecialchars($member['first_name'] . ' ' . $member['last_name']) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Session Date:</td>
-                    <td><input type="date" name="session_date" min="<?= $today ?>" required></td>
-                </tr>
-                <tr>
-                    <td>Start Time:</td>
-                    <td><input type="time" name="start_time" required></td>
-                </tr>
-                <tr>
-                    <td>End Time:</td>
-                    <td><input type="time" name="end_time" required></td>
-                </tr>
-                <tr>
-                    <td>Session Type:</td>
-                    <td>
-                        <select name="session_type" required>
-                            <option value="personal">Personal Training</option>
-                            <option value="nutritional">Nutritional Consultation</option>
-                            <option value="assessment">Fitness Assessment</option>
-                            <option value="rehabilitation">Rehabilitation</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Session Price ($):</td>
-                    <td><input type="number" name="session_price" step="0.01" min="0" value="75.00" placeholder="75.00" required></td>
-                </tr>
-                <tr>
-                    <td>Notes:</td>
-                    <td><textarea name="notes" rows="4" cols="30" placeholder="Session goals, special requirements..."></textarea></td>
-                </tr>
-                <tr>
-                    <td colspan="2"><input type="submit" name="schedule_personal" value="Schedule Session" style="border: 1px solid #000; padding: 5px 10px;"></td>
-                </tr>
-            </table>
+        <h3 class="text-lg font-semibold mb-2">Schedule Personal Training Session</h3>
+        <form method="POST" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block mb-2 font-semibold">Trainer:</label>
+                    <select name="trainer_id" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700" required>
+                        <option value="">Select Trainer</option>
+                        <?php foreach ($trainers as $trainer): ?>
+                            <option value="<?= $trainer['trainer_id'] ?>">
+                                <?= htmlspecialchars($trainer['first_name'] . ' ' . $trainer['last_name']) ?> - $<?= number_format($trainer['hourly_rate'], 2) ?>/hr
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div>
+                    <label class="block mb-2 font-semibold">Member:</label>
+                    <select name="member_id" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700" required>
+                        <option value="">Select Member</option>
+                        <?php foreach ($members as $member): ?>
+                            <option value="<?= $member['member_id'] ?>">
+                                <?= htmlspecialchars($member['first_name'] . ' ' . $member['last_name']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div>
+                    <label class="block mb-2 font-semibold">Session Date:</label>
+                    <input type="date" name="session_date" min="<?= $today ?>" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700" required>
+                </div>
+                <div>
+                    <label class="block mb-2 font-semibold">Start Time:</label>
+                    <input type="time" name="start_time" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700" required>
+                </div>
+                <div>
+                    <label class="block mb-2 font-semibold">End Time:</label>
+                    <input type="time" name="end_time" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700" required>
+                </div>
+                <div>
+                    <label class="block mb-2 font-semibold">Session Type:</label>
+                    <select name="session_type" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700" required>
+                        <option value="personal">Personal Training</option>
+                        <option value="nutritional">Nutritional Consultation</option>
+                        <option value="assessment">Fitness Assessment</option>
+                        <option value="rehabilitation">Rehabilitation</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block mb-2 font-semibold">Session Price ($):</label>
+                    <input type="number" name="session_price" step="0.01" min="0" value="75.00" placeholder="75.00" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700" required>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block mb-2 font-semibold">Notes:</label>
+                    <textarea name="notes" rows="4" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700" placeholder="Session goals, special requirements..."></textarea>
+                </div>
+            </div>
+            <div class="pt-4">
+                <button type="submit" name="schedule_personal" class="bg-[#800080] font-semibold hover:bg-[#690069] cursor-pointer text-white px-6 py-2 rounded-lg shadow">
+                    Schedule Session
+                </button>
+            </div>
         </form>
     </div>
 
