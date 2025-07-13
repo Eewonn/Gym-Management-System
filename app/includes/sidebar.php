@@ -23,9 +23,6 @@
             <a href="index.php?page=training_schedule" class="flex items-center p-3 rounded hover:bg-[#800080] transition-colors duration-300">Training Schedule</a>
         </li>
         <li>
-            <a href="index.php?page=reports" class="flex items-center p-3 rounded hover:bg-[#800080] transition-colors duration-300">Reports</a>
-        </li>
-        <li>
             <a href="logout.php" class="flex items-center p-3 rounded hover:bg-red-700 transition-colors duration-300">Logout</a>
         </li>
     </ul>
