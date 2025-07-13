@@ -98,11 +98,8 @@ CREATE TABLE staff (
 CREATE TABLE staff_attendance (
     attendance_id INTEGER PRIMARY KEY AUTO_INCREMENT,
     staff_id INTEGER,
-    date DATE DEFAULT (CURDATE()),
-    time_in TIME,
-    time_out TIME,
-    break_start TIME,
-    break_end TIME,
+    date DATE DEFAULT CURDATE(),
+    work_hours INTEGER DEFAULT 0,
     notes TEXT,
     status VARCHAR(20) DEFAULT 'present',
     FOREIGN KEY (staff_id) REFERENCES staff(staff_id),
