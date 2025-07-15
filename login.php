@@ -72,15 +72,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
                     <input type="password" name="password" placeholder="Password" required autocomplete="new-password"
                         class="w-full p-4 bg-[#030303] border-none rounded text-[14px] text-[#FAFCFCBA] placeholder-[#FAFCFCBA] focus:outline-none focus:bg-[#030303] focus:text-[#FAFCFCBA]">
                 </div>
-
-                <div class="text-center mb-5">
-                    <a href="#" class="text-gray-400 text-xs no-underline">Forgot Password?</a>
-                </div>
-
+                
                 <button type="submit" name="login"
                     class="w-full p-2 bg-purple-800 text-white border-none rounded font-bold cursor-pointer">
                     SIGN IN
                 </button>
+                <div class="mt-4 text-center">
+                    <a href="register.php" class="w-full inline-block p-2 bg-gray-700 text-white border-none rounded font-bold cursor-pointer hover:bg-gray-800">
+                        CREATE ACCOUNT
+                    </a>
+                </div>
+                
 
             </form>
 
