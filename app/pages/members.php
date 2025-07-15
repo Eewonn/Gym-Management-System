@@ -36,14 +36,28 @@ $search_query = "";
 $members = [];
 
 if (isset($_GET['search']) && !empty($_GET['search'])) {
-    $search_query = $_GET['search'];
+    $search_query = trim($_GET['search']);
+    $keywords = preg_split('/\s+/', $search_query); // split by spaces
+
+    // where clauses for each keyword
+    $where_clauses = [];
+    $params = [$userId]; 
+
+    foreach ($keywords as $word) {
+        $where_clauses[] = "(first_name LIKE ? OR last_name LIKE ?)";
+        $params[] = "%$word%";
+        $params[] = "%$word%";
+    }
+
+    $where_sql = implode(" OR ", $where_clauses);
+
     $stmt = $pdo->prepare("
         SELECT member_id, first_name, last_name, email, phone, membership_type, join_date, status 
         FROM members 
-        WHERE user_id = ? AND (first_name LIKE ? OR last_name LIKE ?)
+        WHERE user_id = ? AND ($where_sql)
         ORDER BY last_name, first_name
     ");
-    $stmt->execute([$userId, "%$search_query%", "%$search_query%"]);
+    $stmt->execute($params);
     $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } else {
     // Get all members for this user
@@ -80,11 +94,14 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
         <!-- Members List (Left Side) -->
         <div class="w-2/3 border p-4 bg-[#222121] rounded-md">
             <h2 class="text-xl font-bold mb-4 text-white">Search Members</h2>
-            <form method="GET" class="flex gap-4 mb-4">
-                <input type="text" name="search" placeholder="Search by name..." value="<?= htmlspecialchars($search_query) ?>" class="flex-1 px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-600">
+            
+            <form method="GET" action="index.php" class="flex gap-4 mb-4">
+                <input type="hidden" name="page" value="members">
+                <input type="text" name="search" placeholder="Search by Name... " value="<?= htmlspecialchars($search_query) ?>" class="flex-1 px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-600">
                 <button type="submit" class="bg-[#800080] hover:bg-[#690069] cursor-pointer text-white font-semibold py-1 px-4 rounded">Search</button>
-                <a href="members.php" class="cursor-pointer bg-gray-600 hover:bg-gray-700 text-white font-semibold py-1 px-4 rounded">Clear</a>
+                <a href="index.php?page=members" class="cursor-pointer bg-gray-600 hover:bg-gray-700 text-white font-semibold py-1 px-4 rounded">Clear</a>
             </form>
+
 
             <h2 class="text-xl font-bold mb-4 text-white">Members List</h2>
             <?php if (!empty($members)): ?>
@@ -160,7 +177,7 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
                 </form>
             </div>
 
-            <div class="h-full border p-4 bg-[#101010] rounded-md>
+            <div class="h-full border p-4 bg-[#101010] rounded-md">
                 <h2 class="text-xl font-bold mb-2 text-white">Edit Member</h2>
                 <p class="text-sm text-gray-400 mb-4">Update member details</p>
                 <form method="POST" action="app/includes/editmember.php">
