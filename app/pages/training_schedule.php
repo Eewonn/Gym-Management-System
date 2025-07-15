@@ -475,7 +475,7 @@ $days_of_week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturd
                     <input type="text" name="certification" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700" placeholder="e.g. NASM, ACE, ACSM">
                 </div>
                 <div>
-                    <label class="block mb-2 font-semibold">Hourly Rate ($):</label>
+                    <label class="block mb-2 font-semibold">Hourly Rate (₱):</label>
                     <input type="number" name="hourly_rate" step="0.01" min="0" value="50.00" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700" placeholder="50.00">
                 </div>
             </div>
@@ -648,7 +648,7 @@ $days_of_week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturd
                     </select>
                 </div>
                 <div>
-                    <label class="block mb-2 font-semibold">Session Price ($):</label>
+                    <label class="block mb-2 font-semibold">Session Price (₱):</label>
                     <input type="number" name="session_price" step="0.01" min="0" value="75.00" placeholder="75.00" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700" required>
                 </div>
                 <div class="md:col-span-2">
