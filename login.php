@@ -2,6 +2,11 @@
 session_start();
 $msg = '';
 
+if (isset($_SESSION['user_id'])) {
+    header('Location: index.php');
+    exit();
+}
+
 require_once __DIR__ . '/db/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
@@ -28,6 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="./assets/img/logo.jpg">
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Gym Management Login</title>
 </head>

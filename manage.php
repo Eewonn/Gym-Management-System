@@ -4,8 +4,6 @@ $msg = '';
 
 require_once __DIR__ . '/db/db.php';
 
-
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
@@ -32,9 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
 
 <head>
     <meta charset="UTF-8">
-    <title>Register - Gym Management</title>
+    <title>Edit Account - Gym Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" type="image/png" href="./assets/img/logo.jpg">
     <link href="./assets/css/output.css" rel="stylesheet">
 </head>
 

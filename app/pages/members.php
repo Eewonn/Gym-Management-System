@@ -13,21 +13,94 @@ $success_message = "";
 // Handle form submissions
 if ($_POST) {
     if (isset($_POST['add_member'])) {
-        // Add new member with user_id
+        // Check for duplicates before inserting
         $stmt = $pdo->prepare("
-            INSERT INTO members (
-                user_id, first_name, last_name, phone, email, membership_type
-            ) VALUES (?, ?, ?, ?, ?, ?)
+            SELECT COUNT(*) FROM members 
+            WHERE user_id = ? AND first_name = ? AND last_name = ? AND email = ?
         ");
         $stmt->execute([
             $userId,
             $_POST['first_name'],
             $_POST['last_name'],
-            $_POST['phone'],
-            $_POST['email'],
-            $_POST['membership_type']
+            $_POST['email']
         ]);
-        $success_message = "Member added successfully!";
+
+        $existingCount = $stmt->fetchColumn();
+
+        if ($existingCount > 0) {
+            $success_message = "❌ Member already exists!";
+        } else {
+            // Insert new member
+            $stmt = $pdo->prepare("
+                INSERT INTO members (
+                    user_id, first_name, last_name, phone, email, membership_type
+                ) VALUES (?, ?, ?, ?, ?, ?)
+            ");
+            $stmt->execute([
+                $userId,
+                $_POST['first_name'],
+                $_POST['last_name'],
+                $_POST['phone'],
+                $_POST['email'],
+                $_POST['membership_type']
+            ]);
+            $success_message = "✅ Member added successfully!";
+        }
+    }
+
+    // handle edit member functionality
+    if (isset($_POST['edit_member'])) {
+        $member_id = $_POST['member_id'];
+
+        // First check if the member exists and belongs to this user
+        $stmt = $pdo->prepare("SELECT * FROM members WHERE member_id = ? AND user_id = ?");
+        $stmt->execute([$member_id, $userId]);
+        $member = $stmt->fetch();
+
+        if ($member) {
+            // Prepare update statement with optional fields
+            $fields = [];
+            $params = [];
+
+            if (!empty($_POST['first_name'])) {
+                $fields[] = "first_name = ?";
+                $params[] = $_POST['first_name'];
+            }
+            if (!empty($_POST['last_name'])) {
+                $fields[] = "last_name = ?";
+                $params[] = $_POST['last_name'];
+            }
+            if (!empty($_POST['email'])) {
+                $fields[] = "email = ?";
+                $params[] = $_POST['email'];
+            }
+            if (!empty($_POST['phone'])) {
+                $fields[] = "phone = ?";
+                $params[] = $_POST['phone'];
+            }
+            if (!empty($_POST['membership_type'])) {
+                $fields[] = "membership_type = ?";
+                $params[] = $_POST['membership_type'];
+            }
+
+            if (!empty($fields)) {
+                $params[] = $member_id;
+                $stmt = $pdo->prepare("UPDATE members SET " . implode(', ', $fields) . " WHERE member_id = ?");
+                $stmt->execute($params);
+            }
+
+            // Redirect with success
+            echo "<script>alert('✅ Member updated successfully!'); window.location.href='../../index.php?page=members';</script>";
+            exit;
+        } else {
+            // Member not found or doesn't belong to user
+            echo "<script>alert('❌ Member ID not found.'); window.location.href='../../index.php?page=members';</script>";
+            exit;
+        }
+    } else {
+        // Invalid access
+        header("Location: ../../index.php?page=members");
+        exit;
     }
 }
 
@@ -85,8 +158,11 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
     <h1 class="text-4xl font-bold">Manage Members</h1>
     
 
-    <?php if (isset($success_message)): ?>
-        <p style="color: green;"><?= $success_message ?></p>
+    <?php if (!empty($success_message)): ?>
+        <script>
+            alert("<?= htmlspecialchars($success_message) ?>");
+            window.location.href = "index.php?page=members";
+        </script>
     <?php endif; ?>
 
     
@@ -180,7 +256,7 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
             <div class="h-full border p-4 bg-[#101010] rounded-md">
                 <h2 class="text-xl font-bold mb-2 text-white">Edit Member</h2>
                 <p class="text-sm text-gray-400 mb-4">Update member details</p>
-                <form method="POST" action="app/includes/editmember.php">
+                <form method="POST">
                     <div class="mb-4">
                         <label class="mb-1 text-base font-medium text-gray-200">Member ID:</label>
                         <input type="text" name="member_id" placeholder="Enter Member ID" required class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-600">

@@ -13,7 +13,7 @@ if (!isset($_SESSION['user_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./assets/css/dashboardstyles.css">
-
+    <link rel="icon" type="image/png" href="./assets/img/logo.jpg">
     <link href="./assets/css/output.css" rel="stylesheet">
     <title>Gym Management System</title>
 </head>
