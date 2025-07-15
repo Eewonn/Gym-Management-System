@@ -1,41 +1,64 @@
 <?php
-//Include database connection file
 require_once __DIR__ . '/../../db/db.php';
 
-//Handle form submissions
+// Make sure user is logged in
+if (!isset($_SESSION['user_id'])) {
+    http_response_code(401);
+    die("Unauthorized access.");
+}
+
+$userId = $_SESSION['user_id'];
+$success_message = "";
+
+// Handle form submissions
 if ($_POST) {
     if (isset($_POST['add_member'])) {
-        //Add new member
-        $stmt = $pdo->prepare("INSERT INTO members (first_name, last_name, date_of_birth, gender, phone, email, address, membership_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        // Add new member with user_id
+        $stmt = $pdo->prepare("
+            INSERT INTO members (
+                user_id, first_name, last_name, phone, email, membership_type
+            ) VALUES (?, ?, ?, ?, ?, ?)
+        ");
         $stmt->execute([
+            $userId,
             $_POST['first_name'],
-            $_POST['last_name'], 
-            $_POST['date_of_birth'],
-            $_POST['gender'],
+            $_POST['last_name'],
             $_POST['phone'],
             $_POST['email'],
-            $_POST['address'],
             $_POST['membership_type']
         ]);
         $success_message = "Member added successfully!";
     }
 }
 
-//Handle search
+// Handle search
 $search_query = "";
 $members = [];
 
 if (isset($_GET['search']) && !empty($_GET['search'])) {
     $search_query = $_GET['search'];
-    $stmt = $pdo->prepare("SELECT * FROM members WHERE first_name LIKE ? OR last_name LIKE ? ORDER BY last_name, first_name");
-    $stmt->execute(["%$search_query%", "%$search_query%"]);
+    $stmt = $pdo->prepare("
+        SELECT member_id, first_name, last_name, email, phone, membership_type, join_date, status 
+        FROM members 
+        WHERE user_id = ? AND (first_name LIKE ? OR last_name LIKE ?)
+        ORDER BY last_name, first_name
+    ");
+    $stmt->execute([$userId, "%$search_query%", "%$search_query%"]);
     $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } else {
-    //Get all members
-    $stmt = $pdo->query("SELECT member_id, first_name, last_name, email, phone, membership_type, join_date, status FROM members ORDER BY join_date DESC");
+    // Get all members for this user
+    $stmt = $pdo->prepare("
+        SELECT member_id, first_name, last_name, email, phone, membership_type, join_date, status 
+        FROM members 
+        WHERE user_id = ?
+        ORDER BY join_date DESC
+    ");
+    $stmt->execute([$userId]);
     $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">

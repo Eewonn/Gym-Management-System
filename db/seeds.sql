@@ -1,3 +1,10 @@
+INSERT INTO users (username, password) VALUES
+('admin', 'test123'),
+('john', 'pass456'),
+('jane', 'secret789'),
+('zoe', 'abc123'),
+('mark', 'qwerty');
+
 INSERT INTO members (
   first_name, last_name, date_of_birth, gender, phone, email, address,
   join_date, membership_type, status

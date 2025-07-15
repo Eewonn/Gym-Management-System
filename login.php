@@ -2,23 +2,24 @@
 session_start();
 $msg = '';
 
+require_once __DIR__ . '/db/db.php';
 
-//Simple password authentication for demonstration purposes 
-//This should be replaced with a proper database connection and user validation in production
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
-   $user = $_POST['username'];
-   $password = $_POST['password'];
+    $user = $_POST['username'];
+    $password = $_POST['password'];
 
-   //For now, we are using hardcoded values for demonstration purposes
-   if ($user === 'admin' && $password === 'test123') {
-      $msg = "You have entered correct username and password";
-      $_SESSION['user_id'] = 1; // replace this with actual user ID from DB later
-      $_SESSION['username'] = $user;
-      header('Location: index.php');
-      exit();
-   } else {
-      $msg = "You have entered wrong Password";
-   }
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ? AND password = ?");
+    $stmt->execute([$user, $password]);
+    $account = $stmt->fetch();
+
+    if ($account) {
+        $_SESSION['user_id'] = $account['user_id'];
+        $_SESSION['username'] = $account['username'];
+        header('Location: index.php');
+        exit();
+    } else {
+        $msg = "Invalid username or password";
+    }
 }
 ?>
 

@@ -2,20 +2,73 @@
 // Include database connection file
 require_once __DIR__ . '/../../db/db.php';
 
+// Check if the user is logged in
+if (!isset($_SESSION['user_id'])) {
+    http_response_code(401);
+    die("Unauthorized access.");
+}
+
+$userId = $_SESSION['user_id'];
+$success_message = "";
+
 // Handle form submissions
 if ($_POST) {
     if (isset($_POST['add_payment'])) {
         // Add new payment
         $payment_date = ($_POST['status'] === 'PAID') ? date('Y-m-d') : null;
-        $stmt = $pdo->prepare("INSERT INTO payments (member_id, amount, payment_type, status, payment_date) VALUES (?, ?, ?, ?, ?)");
+
+        $stmt = $pdo->prepare("
+            INSERT INTO payments (
+                user_id, member_id, amount, payment_type, status, payment_date
+            ) VALUES (?, ?, ?, ?, ?, ?)
+        ");
         $stmt->execute([
+            $userId,
             $_POST['member_id'],
-            $_POST['amount'], 
+            $_POST['amount'],
             $_POST['payment_type'],
             $_POST['status'],
             $payment_date
         ]);
+
         $success_message = "Payment added successfully!";
+        header("Location: " . $_SERVER['REQUEST_URI']);
+        exit();
+    }
+
+    // Update payment status
+    if (isset($_POST['update_payment_id'])) {
+        $paymentId = intval($_POST['update_payment_id']);
+
+        try {
+            $stmt = $pdo->prepare("
+                UPDATE payments 
+                SET status = 'PAID', payment_date = CURDATE() 
+                WHERE payment_id = ? AND user_id = ?
+            ");
+            $stmt->execute([$paymentId, $userId]);
+
+            $success_message = "Payment status updated to PAID!";
+        } catch (PDOException $e) {
+            echo "<p style='color:red;'>Error updating payment status: " . $e->getMessage() . "</p>";
+        }
+
+        header("Location: " . $_SERVER['REQUEST_URI']);
+        exit();
+    }
+
+    // Delete payment
+    if (isset($_POST['remove_payment'])) {
+        $paymentId = intval($_POST['remove_payment']);
+
+        try {
+            $stmt = $pdo->prepare("DELETE FROM payments WHERE payment_id = ? AND user_id = ?");
+            $stmt->execute([$paymentId, $userId]);
+
+            $success_message = "Payment removed successfully!";
+        } catch (PDOException $e) {
+            echo "<p style='color:red;'>Error deleting payment: " . $e->getMessage() . "</p>";
+        }
 
         header("Location: " . $_SERVER['REQUEST_URI']);
         exit();
@@ -32,56 +85,36 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
         SELECT p.*, m.first_name, m.last_name 
         FROM payments p 
         JOIN members m ON p.member_id = m.member_id 
-        WHERE m.first_name LIKE ? OR m.last_name LIKE ? 
+        WHERE p.user_id = ? AND m.user_id = ? 
+        AND (m.first_name LIKE ? OR m.last_name LIKE ?)
         ORDER BY p.payment_date DESC
     ");
-    $stmt->execute(["%$search_query%", "%$search_query%"]);
+    $stmt->execute([$userId, $userId, "%$search_query%", "%$search_query%"]);
     $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } else {
     // Get all payments with member names
-    $stmt = $pdo->query("
+    $stmt = $pdo->prepare("
         SELECT p.*, m.first_name, m.last_name 
         FROM payments p 
         JOIN members m ON p.member_id = m.member_id 
+        WHERE p.user_id = ? AND m.user_id = ?
         ORDER BY p.payment_date DESC
     ");
+    $stmt->execute([$userId, $userId]);
     $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-if (isset($_POST['update_payment_id'])) {
-    $paymentId = intval($_POST['update_payment_id']);
-
-    try {
-        $stmt = $pdo->prepare("UPDATE payments SET status = 'PAID', payment_date = CURDATE() WHERE payment_id = ?");
-        $stmt->execute([$paymentId]);
-        $success_message = "Payment status updated to PAID!";
-    } catch (PDOException $e) {
-        echo "<p style='color:red;'>Error updating payment status: " . $e->getMessage() . "</p>";
-    }
-
-    header("Location: " . $_SERVER['REQUEST_URI']);
-    exit();
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove_payment'])) {
-    $paymentId = intval($_POST['remove_payment']);
-
-    try {
-        $stmt = $pdo->prepare("DELETE FROM payments WHERE payment_id = ?");
-        $stmt->execute([$paymentId]);
-
-        $success_message = "Payment removed successfully!";
-        header("Location: " . $_SERVER['REQUEST_URI']);
-        exit();
-    } catch (PDOException $e) {
-        echo "<p style='color:red;'>Error deleting payment: " . $e->getMessage() . "</p>";
-    }
-}
-
-// Get all members for dropdown
-$members_stmt = $pdo->query("SELECT member_id, first_name, last_name FROM members WHERE status = 'active' ORDER BY first_name");
+// Get all active members for the dropdown (only from current user)
+$members_stmt = $pdo->prepare("
+    SELECT member_id, first_name, last_name 
+    FROM members 
+    WHERE status = 'active' AND user_id = ?
+    ORDER BY first_name
+");
+$members_stmt->execute([$userId]);
 $members = $members_stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

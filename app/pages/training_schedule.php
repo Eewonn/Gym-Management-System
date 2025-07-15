@@ -1,14 +1,26 @@
 <?php
-//Include database connection file
 require_once __DIR__ . '/../../db/db.php';
+
+// Ensure the user is logged in
+if (!isset($_SESSION['user_id'])) {
+    http_response_code(401);
+    die("Unauthorized access.");
+}
+
+$userId = $_SESSION['user_id'];
+$success_message = '';
+$error_message = '';
 
 // Handle form submissions
 if ($_POST) {
-    if (isset($_POST['add_trainer'])) {
-        //Add new trainer
-        try {
-            $stmt = $pdo->prepare("INSERT INTO trainers (first_name, last_name, email, phone, specialization, experience_years, certification, hourly_rate) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    try {
+        if (isset($_POST['add_trainer'])) {
+            $stmt = $pdo->prepare("
+                INSERT INTO trainers (user_id, first_name, last_name, email, phone, specialization, experience_years, certification, hourly_rate)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ");
             $stmt->execute([
+                $userId,
                 $_POST['first_name'],
                 $_POST['last_name'],
                 $_POST['email'],
@@ -19,16 +31,15 @@ if ($_POST) {
                 $_POST['hourly_rate']
             ]);
             $success_message = "Trainer added successfully!";
-        } catch(PDOException $e) {
-            $error_message = "Error adding trainer: " . $e->getMessage();
         }
-    }
-    
-    if (isset($_POST['add_class'])) {
-        //Add new training class
-        try {
-            $stmt = $pdo->prepare("INSERT INTO training_classes (class_name, description, trainer_id, day_of_week, start_time, end_time, max_capacity, class_type, equipment_needed, difficulty_level, price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+        if (isset($_POST['add_class'])) {
+            $stmt = $pdo->prepare("
+                INSERT INTO training_classes (user_id, class_name, description, trainer_id, day_of_week, start_time, end_time, max_capacity, class_type, equipment_needed, difficulty_level, price)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ");
             $stmt->execute([
+                $userId,
                 $_POST['class_name'],
                 $_POST['description'],
                 $_POST['trainer_id'],
@@ -42,15 +53,13 @@ if ($_POST) {
                 $_POST['price']
             ]);
             $success_message = "Training class added successfully!";
-        } catch(PDOException $e) {
-            $error_message = "Error adding class: " . $e->getMessage();
         }
-    }
-    
-    if (isset($_POST['book_class'])) {
-        //Book a class for member
-        try {
-            $stmt = $pdo->prepare("INSERT INTO class_bookings (class_id, member_id, class_date, notes) VALUES (?, ?, ?, ?)");
+
+        if (isset($_POST['book_class'])) {
+            $stmt = $pdo->prepare("
+                INSERT INTO class_bookings (class_id, member_id, class_date, notes)
+                VALUES (?, ?, ?, ?)
+            ");
             $stmt->execute([
                 $_POST['class_id'],
                 $_POST['member_id'],
@@ -58,15 +67,13 @@ if ($_POST) {
                 $_POST['notes']
             ]);
             $success_message = "Class booked successfully!";
-        } catch(PDOException $e) {
-            $error_message = "Error booking class: " . $e->getMessage();
         }
-    }
-    
-    if (isset($_POST['schedule_personal'])) {
-        //Schedule personal training session
-        try {
-            $stmt = $pdo->prepare("INSERT INTO personal_training (trainer_id, member_id, session_date, start_time, end_time, session_type, notes, session_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+
+        if (isset($_POST['schedule_personal'])) {
+            $stmt = $pdo->prepare("
+                INSERT INTO personal_training (trainer_id, member_id, session_date, start_time, end_time, session_type, notes, session_price)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ");
             $stmt->execute([
                 $_POST['trainer_id'],
                 $_POST['member_id'],
@@ -78,97 +85,112 @@ if ($_POST) {
                 $_POST['session_price']
             ]);
             $success_message = "Personal training session scheduled successfully!";
-        } catch(PDOException $e) {
-            $error_message = "Error scheduling session: " . $e->getMessage();
         }
+    } catch (PDOException $e) {
+        $error_message = "Error: " . $e->getMessage();
     }
 }
 
-//Get all trainers
+// Today's date
+$today = date('Y-m-d');
+$today_day = date('l', strtotime($today));
+
+// Get trainers
 $trainers = [];
 try {
-    $stmt = $pdo->query("SELECT * FROM trainers WHERE status = 'active' ORDER BY first_name, last_name");
+    $stmt = $pdo->prepare("SELECT * FROM trainers WHERE user_id = ? AND status = 'active' ORDER BY first_name, last_name");
+    $stmt->execute([$userId]);
     $trainers = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch(PDOException $e) {
+} catch (PDOException $e) {
     $error_message = "Error fetching trainers: " . $e->getMessage();
 }
 
-//Get all members for booking
+// Get active members
 $members = [];
 try {
-    $stmt = $pdo->query("SELECT member_id, first_name, last_name, email FROM members WHERE status = 'active' ORDER BY first_name, last_name");
+    $stmt = $pdo->prepare("SELECT member_id, first_name, last_name, email FROM members WHERE user_id = ? AND status = 'active' ORDER BY first_name, last_name");
+    $stmt->execute([$userId]);
     $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch(PDOException $e) {
+} catch (PDOException $e) {
     $error_message = "Error fetching members: " . $e->getMessage();
 }
 
-//Get all training classes with trainer info
+// Get training classes
 $training_classes = [];
 try {
-    $stmt = $pdo->query("SELECT tc.*, t.first_name as trainer_first_name, t.last_name as trainer_last_name 
-                        FROM training_classes tc 
-                        LEFT JOIN trainers t ON tc.trainer_id = t.trainer_id 
-                        WHERE tc.status = 'active' 
-                        ORDER BY tc.day_of_week, tc.start_time");
+    $stmt = $pdo->prepare("
+        SELECT tc.*, t.first_name as trainer_first_name, t.last_name as trainer_last_name 
+        FROM training_classes tc 
+        LEFT JOIN trainers t ON tc.trainer_id = t.trainer_id 
+        WHERE tc.user_id = ? AND tc.status = 'active'
+        ORDER BY tc.day_of_week, tc.start_time
+    ");
+    $stmt->execute([$userId]);
     $training_classes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch(PDOException $e) {
+} catch (PDOException $e) {
     $error_message = "Error fetching classes: " . $e->getMessage();
 }
 
-//Get today's schedule
-$today = date('Y-m-d');
-$today_day = date('l', strtotime($today));
+// Get today's scheduled classes
 $todays_classes = [];
 try {
-    $stmt = $pdo->prepare("SELECT tc.*, t.first_name as trainer_first_name, t.last_name as trainer_last_name,
-                          (SELECT COUNT(*) FROM class_bookings cb WHERE cb.class_id = tc.class_id AND cb.class_date = ? AND cb.status = 'confirmed') as current_bookings
-                          FROM training_classes tc 
-                          LEFT JOIN trainers t ON tc.trainer_id = t.trainer_id 
-                          WHERE tc.day_of_week = ? AND tc.status = 'active' 
-                          ORDER BY tc.start_time");
-    $stmt->execute([$today, $today_day]);
+    $stmt = $pdo->prepare("
+        SELECT tc.*, t.first_name as trainer_first_name, t.last_name as trainer_last_name,
+        (SELECT COUNT(*) FROM class_bookings cb WHERE cb.class_id = tc.class_id AND cb.class_date = ? AND cb.status = 'confirmed') as current_bookings
+        FROM training_classes tc 
+        LEFT JOIN trainers t ON tc.trainer_id = t.trainer_id 
+        WHERE tc.user_id = ? AND tc.day_of_week = ? AND tc.status = 'active'
+        ORDER BY tc.start_time
+    ");
+    $stmt->execute([$today, $userId, $today_day]);
     $todays_classes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch(PDOException $e) {
+} catch (PDOException $e) {
     $error_message = "Error fetching today's classes: " . $e->getMessage();
 }
 
-//Get personal training sessions for today
+// Get personal training sessions for today
 $todays_personal_sessions = [];
 try {
-    $stmt = $pdo->prepare("SELECT pt.*, t.first_name as trainer_first_name, t.last_name as trainer_last_name,
-                          m.first_name as member_first_name, m.last_name as member_last_name
-                          FROM personal_training pt
-                          JOIN trainers t ON pt.trainer_id = t.trainer_id
-                          JOIN members m ON pt.member_id = m.member_id
-                          WHERE pt.session_date = ? AND pt.status = 'scheduled'
-                          ORDER BY pt.start_time");
-    $stmt->execute([$today]);
+    $stmt = $pdo->prepare("
+        SELECT pt.*, t.first_name as trainer_first_name, t.last_name as trainer_last_name,
+        m.first_name as member_first_name, m.last_name as member_last_name
+        FROM personal_training pt
+        JOIN trainers t ON pt.trainer_id = t.trainer_id
+        JOIN members m ON pt.member_id = m.member_id
+        WHERE pt.session_date = ? AND pt.status = 'scheduled' AND t.user_id = ? AND m.user_id = ?
+        ORDER BY pt.start_time
+    ");
+    $stmt->execute([$today, $userId, $userId]);
     $todays_personal_sessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch(PDOException $e) {
+} catch (PDOException $e) {
     $error_message = "Error fetching personal sessions: " . $e->getMessage();
 }
 
-//Get upcoming bookings
+// Get upcoming bookings
 $upcoming_bookings = [];
 try {
-    $stmt = $pdo->prepare("SELECT cb.*, tc.class_name, tc.start_time, tc.end_time, tc.day_of_week,
-                          m.first_name as member_first_name, m.last_name as member_last_name,
-                          t.first_name as trainer_first_name, t.last_name as trainer_last_name
-                          FROM class_bookings cb
-                          JOIN training_classes tc ON cb.class_id = tc.class_id
-                          JOIN members m ON cb.member_id = m.member_id
-                          LEFT JOIN trainers t ON tc.trainer_id = t.trainer_id
-                          WHERE cb.class_date >= ? AND cb.status = 'confirmed'
-                          ORDER BY cb.class_date, tc.start_time
-                          LIMIT 20");
-    $stmt->execute([$today]);
+    $stmt = $pdo->prepare("
+        SELECT cb.*, tc.class_name, tc.start_time, tc.end_time, tc.day_of_week,
+        m.first_name as member_first_name, m.last_name as member_last_name,
+        t.first_name as trainer_first_name, t.last_name as trainer_last_name
+        FROM class_bookings cb
+        JOIN training_classes tc ON cb.class_id = tc.class_id
+        JOIN members m ON cb.member_id = m.member_id
+        LEFT JOIN trainers t ON tc.trainer_id = t.trainer_id
+        WHERE cb.class_date >= ? AND cb.status = 'confirmed' AND tc.user_id = ? AND m.user_id = ?
+        ORDER BY cb.class_date, tc.start_time
+        LIMIT 20
+    ");
+    $stmt->execute([$today, $userId, $userId]);
     $upcoming_bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch(PDOException $e) {
+} catch (PDOException $e) {
     $error_message = "Error fetching bookings: " . $e->getMessage();
 }
 
+// For dropdowns or displays
 $days_of_week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
