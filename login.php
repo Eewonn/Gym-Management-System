@@ -36,13 +36,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
    <div class="flex w-full h-full overflow-hidden m-0 flex">
 
 
-        <div class="flex-1 relative">
-            <img src="assets/img/gym-bg.jpg" alt="Gym Background" class="w-full h-full" />
-            <div class="absolute inset-0 ml-20 flex flex-col justify-center items-left text-white">
-                <h1 class="mb-5 text-6xl font-bold">MANAGE</h1>
-                <h1 class="mb-5 text-6xl font-bold">MOTIVATE</h1>
-                <h1 class="mb-5 text-6xl font-bold">MAINTAIN</h1>
+        <div class="flex-1 relative flex justify-center items-center">
+            <img src="assets/img/gym-bg.jpg" alt="Gym Background" class="absolute inset-0 w-full h-full object-cover" />
+            <div class="relative z-10 flex flex-col justify-center items-left text-white">
+            <h1 class="mb-5 text-6xl font-bold">MANAGE</h1>
+            <h1 class="mb-5 text-6xl font-bold">MOTIVATE</h1>
+            <h1 class="mb-5 text-6xl font-bold">MAINTAIN</h1>
             </div>
+            <div class="absolute inset-0 bg-black opacity-40"></div>
         </div>
 
         <!-- Right Panel -->

@@ -275,6 +275,22 @@ $members = $members_stmt->fetchAll(PDO::FETCH_ASSOC);
         fetchTotalPending();
 
         setInterval(fetchTotalPending, 5000); // Refresh every minute
+
+        function fetchTotalUnpaid(){
+            fetch('app/includes/totalunpaid.php')
+            .then(response => response.json())
+            .then(data => {
+            document.getElementById('totalUnpaid').innerText = data.total_unpaid !== undefined ? data.total_unpaid : 'Loading...';
+            })
+            .catch(error => {
+            console.error(error);
+            document.getElementById('totalUnpaid').innerText = 'Error';
+            });
+        }
+
+        fetchTotalUnpaid();
+
+        setInterval(fetchTotalUnpaid, 5000); // Refresh every minute
     </script>
 </body>
 </html>
