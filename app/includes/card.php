@@ -13,7 +13,7 @@
     </div>
     <div class="bg-[#222121] text-white p-4 py-10 rounded-lg shadow-md flex-1 min-w-[12rem] text-center border border-[#585757]">
         <div class="text-sm text-gray-400 mb-1">Available Trainers</div>
-        <div class="text-2xl font-bold">4</div>
+        <div class="text-2xl font-bold" id="totalAvailableTrainers"></div>
     </div>
 </div>
 
@@ -65,6 +65,21 @@
     fetchTotalRevenue();
 
     setInterval(fetchTotalRevenue, 5000); // Refresh every minute
+
+    function fetchAvailableTrainers(){
+        fetch('app/includes/availabletrainers.php')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('totalAvailableTrainers').innerText = data.total_active_trainers !== undefined ? data.total_active_trainers : 'Loading...';
+        })
+        .catch(error => {
+            console.error('Error fetching available trainers:', error);
+            document.getElementById('totalAvailableTrainers').innerText = 'Error';
+        });
+    }
+
+    fetchAvailableTrainers();
+    setInterval(fetchAvailableTrainers, 5000); // Refresh every minute  
 
 
 </script>

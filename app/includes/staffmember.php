@@ -1,6 +1,5 @@
 
 <?php
-
 require_once __DIR__ . '/../../db/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_staff_member'])) {
