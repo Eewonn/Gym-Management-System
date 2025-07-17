@@ -1,9 +1,9 @@
 <?php
-// Database configuration (open using phpMyAdmin)
-$host = 'localhost';
-$dbname = 'Gym-Management-System';
-$username = 'root';
-$password = '';
+// Database configuration for InfinityFree
+$host = 'sql211.infinityfree.com';              // MySQL hostname from InfinityFree
+$dbname = 'if0_39475486_flexhub_db';            // Your full database name
+$username = 'if0_39475486';                     // Your InfinityFree MySQL username
+$password = 'LjX9EcYmmIHTR7';                   // Your InfinityFree MySQL password
 
 try {
     // Create PDO connection with explicit port

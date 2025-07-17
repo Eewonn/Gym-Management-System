@@ -12,22 +12,118 @@ $success_message = "";
 
 // Handle form submissions
 if ($_POST) {
+
+    // Handle member deletion
+    if (isset($_POST['delete_member'])) {
+        $member_id = $_POST['member_id'];
+
+        // Ensure member exists and belongs to the current user
+        $stmt = $pdo->prepare("SELECT * FROM members WHERE member_id = ? AND user_id = ?");
+        $stmt->execute([$member_id, $userId]);
+        $member = $stmt->fetch();
+
+        // If member exists, delete it securely with user check
+        if ($member) {
+            $stmt = $pdo->prepare("DELETE FROM members WHERE member_id = ? AND user_id = ?");
+            $stmt->execute([$member_id, $userId]);
+
+            echo "<script>alert('✅ Member Deleted successfully!'); window.location.href='../../index.php?page=members';</script>";
+            exit;
+        } else {
+            echo "<script>alert('❌ Member ID not found.'); window.location.href='../../index.php?page=members';</script>";
+            exit;
+        }
+    }
+
     if (isset($_POST['add_member'])) {
-        // Add new member with user_id
+        // Check for duplicates before inserting
         $stmt = $pdo->prepare("
-            INSERT INTO members (
-                user_id, first_name, last_name, phone, email, membership_type
-            ) VALUES (?, ?, ?, ?, ?, ?)
+            SELECT COUNT(*) FROM members 
+            WHERE user_id = ? AND first_name = ? AND last_name = ? AND email = ?
         ");
         $stmt->execute([
             $userId,
             $_POST['first_name'],
             $_POST['last_name'],
-            $_POST['phone'],
-            $_POST['email'],
-            $_POST['membership_type']
+            $_POST['email']
         ]);
-        $success_message = "Member added successfully!";
+
+        $existingCount = $stmt->fetchColumn();
+
+        if ($existingCount > 0) {
+            $success_message = "❌ Member already exists!";
+        } else {
+            // Insert new member
+            $stmt = $pdo->prepare("
+                INSERT INTO members (
+                    user_id, first_name, last_name, phone, email, membership_type
+                ) VALUES (?, ?, ?, ?, ?, ?)
+            ");
+            $stmt->execute([
+                $userId,
+                $_POST['first_name'],
+                $_POST['last_name'],
+                $_POST['phone'],
+                $_POST['email'],
+                $_POST['membership_type']
+            ]);
+            $success_message = "✅ Member added successfully!";
+        }
+    }
+
+    // handle edit member functionality
+    if (isset($_POST['edit_member'])) {
+        $member_id = $_POST['member_id'];
+
+        // First check if the member exists and belongs to this user
+        $stmt = $pdo->prepare("SELECT * FROM members WHERE member_id = ? AND user_id = ?");
+        $stmt->execute([$member_id, $userId]);
+        $member = $stmt->fetch();
+
+        if ($member) {
+            // Prepare update statement with optional fields
+            $fields = [];
+            $params = [];
+
+            if (!empty($_POST['first_name'])) {
+                $fields[] = "first_name = ?";
+                $params[] = $_POST['first_name'];
+            }
+            if (!empty($_POST['last_name'])) {
+                $fields[] = "last_name = ?";
+                $params[] = $_POST['last_name'];
+            }
+            if (!empty($_POST['email'])) {
+                $fields[] = "email = ?";
+                $params[] = $_POST['email'];
+            }
+            if (!empty($_POST['phone'])) {
+                $fields[] = "phone = ?";
+                $params[] = $_POST['phone'];
+            }
+            if (!empty($_POST['membership_type'])) {
+                $fields[] = "membership_type = ?";
+                $params[] = $_POST['membership_type'];
+            }
+
+            if (!empty($fields)) {
+                $params[] = $member_id;
+                $stmt = $pdo->prepare("UPDATE members SET " . implode(', ', $fields) . " WHERE member_id = ?");
+                $stmt->execute($params);
+            }
+
+            // Redirect with success
+            echo "<script>alert('✅ Member updated successfully!'); window.location.href='../../index.php?page=members';</script>";
+            exit;
+        } else {
+            // Member not found or doesn't belong to user
+            echo "<script>alert('❌ Member ID not found.'); window.location.href='../../index.php?page=members';</script>";
+            exit;
+        }
+    } else {
+        // Invalid access
+        header("Location: ../../index.php?page=members");
+        exit;
     }
 }
 
@@ -36,14 +132,28 @@ $search_query = "";
 $members = [];
 
 if (isset($_GET['search']) && !empty($_GET['search'])) {
-    $search_query = $_GET['search'];
+    $search_query = trim($_GET['search']);
+    $keywords = preg_split('/\s+/', $search_query); // split by spaces
+
+    // where clauses for each keyword
+    $where_clauses = [];
+    $params = [$userId]; 
+
+    foreach ($keywords as $word) {
+        $where_clauses[] = "(first_name LIKE ? OR last_name LIKE ?)";
+        $params[] = "%$word%";
+        $params[] = "%$word%";
+    }
+
+    $where_sql = implode(" OR ", $where_clauses);
+
     $stmt = $pdo->prepare("
         SELECT member_id, first_name, last_name, email, phone, membership_type, join_date, status 
         FROM members 
-        WHERE user_id = ? AND (first_name LIKE ? OR last_name LIKE ?)
+        WHERE user_id = ? AND ($where_sql)
         ORDER BY last_name, first_name
     ");
-    $stmt->execute([$userId, "%$search_query%", "%$search_query%"]);
+    $stmt->execute($params);
     $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } else {
     // Get all members for this user
@@ -56,6 +166,9 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
     $stmt->execute([$userId]);
     $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+
+
 ?>
 
 
@@ -71,20 +184,26 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
     <h1 class="text-4xl font-bold">Manage Members</h1>
     
 
-    <?php if (isset($success_message)): ?>
-        <p style="color: green;"><?= $success_message ?></p>
+    <?php if (!empty($success_message)): ?>
+        <script>
+            alert("<?= htmlspecialchars($success_message) ?>");
+            window.location.href = "index.php?page=members";
+        </script>
     <?php endif; ?>
 
     
     <div class="flex min-h-screen p-8 gap-8">
         <!-- Members List (Left Side) -->
-        <div class="w-2/3 border p-4 bg-[#222121] rounded-md">
+        <div class="w-2/3 border p-3 bg-[#222121] rounded-md">
             <h2 class="text-xl font-bold mb-4 text-white">Search Members</h2>
-            <form method="GET" class="flex gap-4 mb-4">
-                <input type="text" name="search" placeholder="Search by name..." value="<?= htmlspecialchars($search_query) ?>" class="flex-1 px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-600">
+            
+            <form method="GET" action="index.php" class="flex gap-4 mb-4">
+                <input type="hidden" name="page" value="members">
+                <input type="text" name="search" placeholder="Search by Name... " value="<?= htmlspecialchars($search_query) ?>" class="flex-1 px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-600">
                 <button type="submit" class="bg-[#800080] hover:bg-[#690069] cursor-pointer text-white font-semibold py-1 px-4 rounded">Search</button>
-                <a href="members.php" class="cursor-pointer bg-gray-600 hover:bg-gray-700 text-white font-semibold py-1 px-4 rounded">Clear</a>
+                <a href="index.php?page=members" class="cursor-pointer bg-gray-600 hover:bg-gray-700 text-white font-semibold py-1 px-4 rounded">Clear</a>
             </form>
+
 
             <h2 class="text-xl font-bold mb-4 text-white">Members List</h2>
             <?php if (!empty($members)): ?>
@@ -97,6 +216,7 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
                                 <th class="border border-gray-700 px-4 py-2">Type</th>
                                 <th class="border border-gray-700 px-4 py-2">Email</th>
                                 <th class="border border-gray-700 px-4 py-2">Phone</th>
+                                <th class="border border-gray-700 px-4 py-2">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -107,6 +227,13 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
                                 <td class="border border-gray-700 px-4 py-2"><?= $member['membership_type'] ?></td>
                                 <td class="border border-gray-700 px-4 py-2"><?= $member['email'] ?></td>
                                 <td class="border border-gray-700 px-4 py-2"><?= $member['phone'] ?></td>
+                                <td class="border border-gray-700 px-4 py-2">
+                                    <form method="POST" onsubmit="return confirm('Are you sure you want to delete this member?');">
+                                        <input type="hidden" name="member_id" value="<?= $member['member_id'] ?>">
+                                        <button type="submit" name="delete_member"  style="background-color: #722323;"  
+                                        class="bg-[#722323] cursor-pointer text-white font-bold px-4 py-1 rounded shadow transition">Remove</button>
+                                    </form>
+                                </td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -160,10 +287,10 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
                 </form>
             </div>
 
-            <div class="h-full border p-4 bg-[#101010] rounded-md>
+            <div class="h-full border p-4 bg-[#101010] rounded-md">
                 <h2 class="text-xl font-bold mb-2 text-white">Edit Member</h2>
                 <p class="text-sm text-gray-400 mb-4">Update member details</p>
-                <form method="POST" action="app/includes/editmember.php">
+                <form method="POST">
                     <div class="mb-4">
                         <label class="mb-1 text-base font-medium text-gray-200">Member ID:</label>
                         <input type="text" name="member_id" placeholder="Enter Member ID" required class="w-full px-2 py-1 rounded bg-black text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-600">

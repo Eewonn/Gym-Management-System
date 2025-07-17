@@ -15,12 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
     if ($stmt->rowCount() > 0) {
         $msg = "Username already exists!";
     } else {
-        // Hash the password before storing it
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-        // Insert new user with hashed password
+        // Insert new user
         $stmt = $pdo->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
-        $stmt->execute([$username, $hashedPassword]);
+        $stmt->execute([$username, $password]);
 
         // Redirect to login
         header('Location: login.php?registered=true');
@@ -33,9 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
 
 <head>
     <meta charset="UTF-8">
-    <title>Register - Gym Management</title>
+    <title>Edit Account - Gym Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" type="image/png" href="./assets/img/logo.jpg">
     <link href="./assets/css/output.css" rel="stylesheet">
 </head>
 
