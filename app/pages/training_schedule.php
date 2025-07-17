@@ -378,7 +378,7 @@ $days_of_week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturd
 
                     <!-- Price -->
                     <div>
-                        <label class="block mb-2 mt-2 font-semibold">Price ($):</label>
+                        <label class="block mb-2 mt-2 font-semibold">Price (₱):</label>
                         <input type="number" name="price" step="0.01" min="0" value="15.00" class="w-full rounded-lg px-3 py-2 bg-gray-900 border border-gray-700">
                     </div>
 

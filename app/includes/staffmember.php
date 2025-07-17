@@ -80,7 +80,6 @@ $staffs = $staffs_stmt->fetchAll(PDO::FETCH_ASSOC);
                         <select id="position" name="position" class="w-full p-2 rounded bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-600" required>
                             <option value="">Select Position</option>
                             <option value="Manager">Manager</option>
-                            <option value="Trainer">Trainer</option>
                             <option value="Receptionist">Receptionist</option>
                             <option value="Cleaner">Cleaner</option>
                         </select>

@@ -6,7 +6,7 @@
 
 
     <!-- Sidebar Menu -->
-    <ul class="list-none p-0 mt-10 text-lg font-medium space-y-4">
+    <ul class="list-none p-0 mt-10 text-lg font-bold space-y-4">
         <li>
             <a href="index.php?page=dashboard" class="flex items-center p-3 rounded hover:bg-[#800080] transition-colors duration-300">Dashboard</a>
         </li>

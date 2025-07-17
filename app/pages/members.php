@@ -12,6 +12,29 @@ $success_message = "";
 
 // Handle form submissions
 if ($_POST) {
+
+    // Handle member deletion
+    if (isset($_POST['delete_member'])) {
+        $member_id = $_POST['member_id'];
+
+        // Ensure member exists and belongs to the current user
+        $stmt = $pdo->prepare("SELECT * FROM members WHERE member_id = ? AND user_id = ?");
+        $stmt->execute([$member_id, $userId]);
+        $member = $stmt->fetch();
+
+        // If member exists, delete it securely with user check
+        if ($member) {
+            $stmt = $pdo->prepare("DELETE FROM members WHERE member_id = ? AND user_id = ?");
+            $stmt->execute([$member_id, $userId]);
+
+            echo "<script>alert('✅ Member Deleted successfully!'); window.location.href='../../index.php?page=members';</script>";
+            exit;
+        } else {
+            echo "<script>alert('❌ Member ID not found.'); window.location.href='../../index.php?page=members';</script>";
+            exit;
+        }
+    }
+
     if (isset($_POST['add_member'])) {
         // Check for duplicates before inserting
         $stmt = $pdo->prepare("
@@ -143,6 +166,9 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
     $stmt->execute([$userId]);
     $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+
+
 ?>
 
 
@@ -168,7 +194,7 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
     
     <div class="flex min-h-screen p-8 gap-8">
         <!-- Members List (Left Side) -->
-        <div class="w-2/3 border p-4 bg-[#222121] rounded-md">
+        <div class="w-2/3 border p-3 bg-[#222121] rounded-md">
             <h2 class="text-xl font-bold mb-4 text-white">Search Members</h2>
             
             <form method="GET" action="index.php" class="flex gap-4 mb-4">
@@ -190,6 +216,7 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
                                 <th class="border border-gray-700 px-4 py-2">Type</th>
                                 <th class="border border-gray-700 px-4 py-2">Email</th>
                                 <th class="border border-gray-700 px-4 py-2">Phone</th>
+                                <th class="border border-gray-700 px-4 py-2">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -200,6 +227,13 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
                                 <td class="border border-gray-700 px-4 py-2"><?= $member['membership_type'] ?></td>
                                 <td class="border border-gray-700 px-4 py-2"><?= $member['email'] ?></td>
                                 <td class="border border-gray-700 px-4 py-2"><?= $member['phone'] ?></td>
+                                <td class="border border-gray-700 px-4 py-2">
+                                    <form method="POST" onsubmit="return confirm('Are you sure you want to delete this member?');">
+                                        <input type="hidden" name="member_id" value="<?= $member['member_id'] ?>">
+                                        <button type="submit" name="delete_member"  style="background-color: #722323;"  
+                                        class="bg-[#722323] cursor-pointer text-white font-bold px-4 py-1 rounded shadow transition">Remove</button>
+                                    </form>
+                                </td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>

@@ -4,8 +4,6 @@ $msg = '';
 
 require_once __DIR__ . '/db/db.php';
 
-
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
@@ -17,9 +15,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
     if ($stmt->rowCount() > 0) {
         $msg = "Username already exists!";
     } else {
-        // Insert new user
+        // Hash the password before storing it
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        // Insert new user with hashed password
         $stmt = $pdo->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
-        $stmt->execute([$username, $password]);
+        $stmt->execute([$username, $hashedPassword]);
 
         // Redirect to login
         header('Location: login.php?registered=true');
