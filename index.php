@@ -15,6 +15,7 @@ if (!isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="./assets/css/dashboardstyles.css">
     <link rel="icon" type="image/png" href="./assets/img/logo.jpg">
     <link href="./assets/css/output.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>Gym Management System</title>
 </head>
 <body>
